@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="MscConfig:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="MscConfig.war">
+      <element id="artifact" artifact-name="MscConfig:war exploded" />
+    </root>
+  </artifact>
+</component>
