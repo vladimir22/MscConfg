@@ -1,4 +1,4 @@
-package com.springapp.mvc;
+package com.mscconfig.mvc;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
