@@ -6,22 +6,26 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.util.Map;
-import org.springframework.stereotype.Controller;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.stereotype.Component;
 
 /**
  * User: Vladimir
  * Date: 22.05.13
  * Time: 10:09
- * Тест класс (что бы не захламлять контроллер)
+ * Класс-фабрика. Собирает нужную команду.
  */
-@Controller
-public class Testing {
-	public static final Logger log = LoggerFactory.getLogger(Testing.class);
+@Component("cmdFactory")
+public class CmdFactory {
 
-	public Testing() {
+
+	public static final Logger log = LoggerFactory.getLogger(CmdFactory.class);
+
+	public CmdFactory() {
 	}
-	public NsnCmd getTestCommand() throws NsnCmdException {
+	public NsnCmd createTestCmd() throws NsnCmdException {
 		NsnCmd childCmd = new NsnCmd();
 		childCmd.setCmd("exemmlmx -c \"ZRQI:ROU:NAME=AIMSI;\" -n \"MSS-239663\"");
 		                                                 //берем 1 строку               удаляем "имя:      "     удаляем "  \n"
@@ -43,21 +47,26 @@ public class Testing {
 		return parentCmd;
 	}
 
-	public void executeSsh(SshCommandService sshCommandService,boolean isTest){
-		try {
-		NsnCmd nsnCmd = getTestCommand();
+	public NsnCmd createDispVsubCmd(String msisdn) throws NsnCmdException {
+		NsnCmd nsnCmd = new NsnCmd();
+		nsnCmd.setCmd("exemmlmx -c \"ZMVO:MSISDN="+msisdn+";\" -n \"MSS-239663\"");
+		List<String> paramList = new ArrayList();
+		paramList.add("INTERNATIONAL MOBILE SUBSCRIBER IDENTITY");
+		paramList.add("ACTIVATION STATUS");
+		paramList.add("LOCATION AREA CODE OF IMSI");
+		paramList.add("MOBILE NOT REACHABLE FLAG");
+		paramList.add("IMSI DETACH FLAG");
+		paramList.add("DETACH CAUSE");
+		paramList.add("LAST ACTIVATE DATE");
+		paramList.add("LAST USED CELL ID");
+		paramList.add("HLR-ADDRESS");
+		paramList.add("SCP ADDRESS");
+		paramList.add("MOBILE SUBSCRIBER INTERNATIONAL ISDN NUMBER");
 
-			if (isTest) sshCommandService.executeTestNsnCmd(nsnCmd);  // наполняем значениями
-			else{
-				sshCommandService.executeNsnCmd(nsnCmd);
-            }
-			log.info("+++++++++++++++++++++++++ NsnCmd +++++++++++++++++++++++++++");
-			log.info(nsnCmd.toString());
-			log.info("+++++++++++++++++++++++++ NsnCmd End +++++++++++++++++++++++++++");
-
-		} catch (IOException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		for (String val : paramList){
+			nsnCmd.addValue(val, new Param(val + "(.+?\n){1}", "(\\s*)" + val + "(\\W+)", "(\\s*?)\n"));
 		}
+		return nsnCmd;
 	}
 
 

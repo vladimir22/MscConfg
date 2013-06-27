@@ -15,8 +15,62 @@
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link href="http://twitter.github.io/bootstrap/assets/css/bootstrap.css" rel="stylesheet">
-    <link href="http://twitter.github.io/bootstrap/assets/css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/resources/bootstrap.css" rel="stylesheet">
+    <link href="/resources/bootstrap-responsive.css" rel="stylesheet">
+
+    <%--<script type="text/javascript" src="<c:url value="/resources/jquery-1.4.4.min.js" />"></script>--%>
+    <script src="/resources/jquery-1.9.1.js"></script>
+
+    <script type="text/javascript">
+        function helloAjax(cmdname) {
+            $.ajax({
+                url : "<c:url value="http://localhost:8080/helloajax" />",
+                data : {cmdname : cmdname, istest :$("#istest").find("option:selected").val()},
+                beforeSend: function(){
+                    $("#ajaxResponse").html('<img src="/resources/AjaxLoader.gif" /> Now loading...');
+                },
+                success : function(result) {
+                    $("#ajaxResponse").html(result);	//принимаем и вставляем ajax ответ
+                },
+                error : function(result) {
+                    $('#ajaxResponse').set("Ajax response error:" + result.responseText);
+
+                }
+            });
+
+        }
+    </script>
+
+    <script type="text/javascript">
+        function doAjaxPost(frm, cmdName) {
+
+            var name = cmdName;
+            var name2 = frm.msisdn.value;
+
+            var object = {name:name,name2:name2};
+            htmlStr = JSON.stringify(object);
+            alert(".ajax:" + htmlStr);
+
+            $.ajax({
+                url:  "<c:url value="http://localhost:8080/AddUser" />",
+                type: "POST",
+
+                dataType: 'json',
+                data:   htmlStr,
+                contentType: 'application/json',
+                mimeType: 'application/json',
+
+                error: function(data){
+                    alert("fail");
+                },
+                success: function(data){
+                    $("#ajaxResponse").html(result);
+                }
+            });
+
+        };
+    </script>
+
 </head>
 
 <body>
@@ -24,6 +78,54 @@
 <div class="container">
     <form action="testBtn/false" method="post"><input type="submit" class="btn btn-danger btn-mini" value="CmdToSSH"/></form>
     <form action="testBtn/true" method="post"><input type="submit" class="btn btn-danger btn-mini" value="CmdTest"/></form>
+
+    <table >
+        <tr style="vertical-align: top">
+            <td>
+                <button onclick="helloAjax('tempcmd')" class="btn btn-danger btn-mini"  style="height: 25px; width: 80px">TempCmd</button>
+                <button onclick="helloAjax('vsubcmd')" class="btn btn-danger btn-mini"  style="height: 25px; width: 80px">VsubCmd</button>
+                <!-- <a onclick="helloAjax()">Ajax Say Hello</a>  -->
+           </td>
+            <td>
+                isTest =
+                <select id="istest" style="height: 25px; width: 80px">
+                    <option>true</option>
+                    <option>false</option>
+                </select>
+            </td>
+            <td>
+                <div name="ajaxResponse" id="ajaxResponse"></div>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form name="test">
+
+
+                <b>Номер:</b>
+                <input type="text" size="20" name="msisdn"  id="msisdn">
+
+                <button onclick="doAjaxPost(this.form,'vsub')" class="btn btn-danger btn-mini"  style="height: 25px; width: 80px">Search</button>
+                </form>
+            </td>
+            <td>
+                TestCmd =
+                <select id="testvsub" style="height: 25px; width: 80px">
+                    <option>true</option>
+                    <option>false</option>
+                </select>
+            </td>
+
+        </tr>
+        <tr>
+
+        </tr>
+
+        city
+    </table>
+
+
+
     <div class="row">
         <div class="span8 offset2">
             <h1>Users</h1>

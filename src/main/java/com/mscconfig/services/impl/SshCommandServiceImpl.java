@@ -14,7 +14,7 @@ import java.io.IOException;
  * Time: 10:55
  * Сервис для работы с SSH коммандами
  */
-@Service
+@Service("sshCommandService")
 public class SshCommandServiceImpl implements  SshCommandService {
 	@Autowired
 	private SshCommandDao sshCommandDao;

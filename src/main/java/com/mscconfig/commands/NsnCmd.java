@@ -5,6 +5,7 @@ import com.mscconfig.commands.exceptions.NsnCmdException;
 
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -19,7 +20,7 @@ import java.util.regex.Pattern;
  */
 public class NsnCmd {
 	private String cmd;    //ZRQI:ROU:NAME=%VALUE%;  или пока  exemmlmx -c "ZRQI:ROU:NAME=AIMSI;" -n "MSS-239663"
-	private Map<String,Param> values = new HashMap<>(); // значения
+	private Map<String,Param> values = new LinkedHashMap<>(); // значения
 	private NsnCmd preCmd;   // преКоманда в значения которой (%value%) нужны для выполнения команды
 	private NsnCmd parentCmd;
 

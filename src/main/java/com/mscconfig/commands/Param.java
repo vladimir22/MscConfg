@@ -65,7 +65,7 @@ public class Param {
 
 	@Override
 	public String toString() {
-		return "Value{" + value +"}";
+		return "{" + value +"}";
 
 	}
 }

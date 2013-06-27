@@ -11,7 +11,7 @@ import java.io.IOException;
  * Please describe this stuff
  */
 public interface SshCommandService {
-	String SERVICE_NAME = "SshCommandService";
+	String SERVICE_NAME = "sshCommandService";
 
 	String executeCmd(String cmd) throws IOException;
 	String executeTestCmd(String cmd);

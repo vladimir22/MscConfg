@@ -210,6 +210,90 @@ public class SSHClientTest {
 				"\n" +
 				"MEDIA GATEWAY DATA HANDLING COMMAND <JG_>\n" +
 				"<\n");
+		cmdMap.put("exemmlmx -c \"ZMVO:MSISDN=380503281053;\" -n \"MSS-239663\"","\n" +
+				"\n" +
+				"LOADING PROGRAM VERSION 24.27-0\n" +
+				"\n" +
+				"MSCi      MSS_DONETSK               2013-06-25  15:33:15\n" +
+				"\n" +
+				"                SUBSCRIBER INFORMATION:\n" +
+				"\n" +
+				"        INTERNATIONAL MOBILE SUBSCRIBER IDENTITY ...... 255013200778043\n" +
+				"        TEMPORARY MOBILE SUBSCRIBER IDENTITY .......... N\n" +
+				"        ACTIVATION STATUS ............................. A\n" +
+				"        MOBILE STATION CATEGORY ....................... OR\n" +
+				"        EXACT MOBILE STATION CATEGORY ................. UNK\n" +
+				"        ROUTING CATEGORY .............................. N\n" +
+				"        ADDITIONAL ROUTING CATEGORY ................... N\n" +
+				"        MOBILE COUNTRY CODE ........................... 0255D\n" +
+				"        MOBILE NETWORK CODE ........................... 0001D\n" +
+				"        LOCATION AREA CODE OF IMSI .................... EDF5H/60917D\n" +
+				"        VIRTUAL VLR INDEX ............................. NOT DEFINED\n" +
+				"        RADIO ACCESS INFO ............................. GSM\n" +
+				"        MOBILE NOT REACHABLE FLAG ..................... N\n" +
+				"        HLR FAILURE FLAG .............................. N\n" +
+				"        SUPPLEMENTARY SERVICE CHECK FLAG .............. N\n" +
+				"        IMSI DETACH FLAG .............................. N\n" +
+				"        DETACH CAUSE ..................................\n" +
+				"        LAST ACTIVATE DATE ............................ 06-25 14:41\n" +
+				"        LAST USED CELL ID ............................. 12DFH/04831D\n" +
+				"        HLR-ADDRESS ................................... 38050000361\n" +
+				"        SECURITY CONTEXT TYPE.......................... GSM\n" +
+				"        SECURITY CHECKINGS DONE FLAG .................. Y\n" +
+				"\n" +
+				"        INTELLIGENT NETWORK MOBILITY MANAGEMENT:\n" +
+				"        SCP ADDRESS ................................... N\n" +
+				"        DETECTION POINT NAME .......................... N\n" +
+				"        SERVICE KEY ................................... N\n" +
+				"        TRANSACTION TYPE .............................. N\n" +
+				"\n" +
+				"        INTELLIGENT NETWORK SHORT MESSAGE SERVICE:\n" +
+				"        SCP ADDRESS ................................... N\n" +
+				"        DETECTION POINT NAME .......................... N\n" +
+				"        SERVICE KEY ................................... N\n" +
+				"        TRIGGERING ALL MULTIPLE MESSAGES .............. N\n" +
+				"\n" +
+				"        COMPLETION OF CALL TO BUSY SUBSCRIBER:\n" +
+				"        ORIGINATING CCBS .............................. N\n" +
+				"        TERMINATING CCBS .............................. N\n" +
+				"        CCBS MONITORED ................................ N\n" +
+				"\n" +
+				"        SUBSCRIBER FRAUD OBSERVATION:\n" +
+				"        NUMBER OF CALL TRANSFERS ...................... 0\n" +
+				"        NUMBER OF OBSERVATION ACTIVATIONS ............. 0\n" +
+				"        NUMBER OF SAMPLING PERIOD ..................... 0\n" +
+				"\n" +
+				"        SIMULTANEOUS CALL TRANSFER IN PROGRESS ........ 0\n" +
+				"\n" +
+				"        FRAUD DETECTION AND LIMITATION:\n" +
+				"        TIME LIMIT OF MO CALLS ........................ DEF\n" +
+				"        ACTION PARAMETER FOR MO CALLS ................. DEF\n" +
+				"        TIME LIMIT OF CF CALLS ........................ DEF\n" +
+				"        ACTION PARAMETER FOR CF CALLS ................. DEF\n" +
+				"        TIME LIMIT OF CT CALLS ........................ DEF\n" +
+				"        ACTION PARAMETER FOR CT CALLS ................. DEF\n" +
+				"        MAX. NUMBER OF CT INVOCATIONS ................. DEF\n" +
+				"        ACTION PARAMETER FOR CT INVOCATIONS ........... DEF\n" +
+				"\n" +
+				"        ZONE CODES:\n" +
+				"\n" +
+				"\n" +
+				"        SGSN ADDRESS .................................. N\n" +
+				"        CONFIRMED RADIO CONTACT VIA SGSN .............. N\n" +
+				"\n" +
+				"        VLRU IDENTITY ................................. 1\n" +
+				"\n" +
+				"        MOBILE SUBSCRIBER INTERNATIONAL ISDN NUMBER ... 380503281053\n" +
+				"        MOBILE SUBSCRIBER ALTERNATE LINE SERVICE MSISDN\n" +
+				"\n" +
+				"        BASIC SERVICES:\n" +
+				"        B16 T21 T22 T11\n" +
+				"\n" +
+				"\n" +
+				"        MULTISIM INFO:\n" +
+				"        OWN MSISDN .................................... N\n" +
+				"\n" +
+				"COMMAND EXECUTED\n");
 }
 
 }

@@ -1,4 +1,4 @@
-package com.mscconfig.commands;
+package com.mscconfig.temp;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

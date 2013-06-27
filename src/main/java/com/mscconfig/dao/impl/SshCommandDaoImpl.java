@@ -68,6 +68,7 @@ public class SshCommandDaoImpl implements SshCommandDao {
     	while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх) до объекта nsnCmd
 			String completedCmd =  cmd.getCompletedCmd();
 			String response = SSHClientTest.cmdMap.get(completedCmd);
+			if (response==null) throw new IOException("Unknown command for SSHClientTest map :"+completedCmd);
     		for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту
 				val.getValue().fillData(response);
 				//log.info(val.toString());
