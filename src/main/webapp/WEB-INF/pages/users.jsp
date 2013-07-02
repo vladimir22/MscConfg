@@ -17,20 +17,18 @@
 
     <link href="/resources/bootstrap.css" rel="stylesheet">
     <link href="/resources/bootstrap-responsive.css" rel="stylesheet">
-
-    <%--<script type="text/javascript" src="<c:url value="/resources/jquery-1.4.4.min.js" />"></script>--%>
     <script src="/resources/jquery-1.9.1.js"></script>
 
     <script type="text/javascript">
-        function helloAjax(cmdname) {
+        function helloAjax(cmdname) {     // Ajax Get request example (send params)
             $.ajax({
-                url : "<c:url value="http://localhost:8080/helloajax" />",
+                url : "<c:url value="/helloajax" />",
                 data : {cmdname : cmdname, istest :$("#istest").find("option:selected").val()},
                 beforeSend: function(){
                     $("#ajaxResponse").html('<img src="/resources/AjaxLoader.gif" /> Now loading...');
                 },
                 success : function(result) {
-                    $("#ajaxResponse").html(result);	//принимаем и вставляем ajax ответ
+                    $("#ajaxResponse").html(result);	//result - response from server (Spring method return)
                 },
                 error : function(result) {
                     $('#ajaxResponse').set("Ajax response error:" + result.responseText);
@@ -42,32 +40,25 @@
     </script>
 
     <script type="text/javascript">
-        function doAjaxPost(frm, cmdName) {
-
-            var name = cmdName;
-            var name2 = frm.msisdn.value;
-
-            var object = {name:name,name2:name2};
-            htmlStr = JSON.stringify(object);
+        function doAjaxPost(cmd) {       // Ajax Post request example (Send new Object)
+            var num = $("#msisdn").val();
+            var object = {cmdName: cmd,number: num};
+            var htmlStr = JSON.stringify(object);     // serialize , in Spring Object implemets Serializable is a must !!! (also check Jakson lib version - serialization jar)
             alert(".ajax:" + htmlStr);
 
             $.ajax({
-                url:  "<c:url value="http://localhost:8080/AddUser" />",
                 type: "POST",
-
-                dataType: 'json',
-                data:   htmlStr,
-                contentType: 'application/json',
-                mimeType: 'application/json',
-
-                error: function(data){
+                url:  "<c:url value="/AddUser" />",
+                data:  htmlStr,        // data: object   --> not work (400-The request sent by the client was syntactically incorrect) !!!
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                error: function(msg){
                     alert("fail");
                 },
-                success: function(data){
-                    $("#ajaxResponse").html(result);
+                success: function(msg){
+                    alert(JSON.stringify(msg));
                 }
             });
-
         };
     </script>
 
@@ -99,14 +90,14 @@
         </tr>
         <tr>
             <td>
-                <form name="test">
+
 
 
                 <b>Номер:</b>
                 <input type="text" size="20" name="msisdn"  id="msisdn">
 
-                <button onclick="doAjaxPost(this.form,'vsub')" class="btn btn-danger btn-mini"  style="height: 25px; width: 80px">Search</button>
-                </form>
+                <button onclick="doAjaxPost('VsubCmd')" class="btn btn-danger btn-mini"  style="height: 25px; width: 80px">Search</button>
+
             </td>
             <td>
                 TestCmd =

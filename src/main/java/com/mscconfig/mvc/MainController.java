@@ -7,7 +7,7 @@ import com.mscconfig.commands.СmdRunner;
 import com.mscconfig.entities.MgwData;
 import com.mscconfig.services.SshCommandService;
 import com.mscconfig.temp.AjaxObj;
-import com.mscconfig.temp.Wrapper;
+import com.mscconfig.temp.CmdAjax;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Locale;
 
 
 @Controller
@@ -42,7 +41,7 @@ public class MainController {
 		// добавляем в в карту-модель объект для работы с jsp страницей
 		model.addAttribute("mgwData", new MgwData());
 		model.addAttribute("mgwDatas", mgwRepository.findAll());
-        return "users";
+        return "cmd";
     }
 
     @RequestMapping(value = "/api/users", method = RequestMethod.GET)
@@ -165,17 +164,52 @@ public class MainController {
 
 		return cmd;
 	}
+	private String executeCmd(NsnCmd cmd, Boolean isTest) throws IOException {
+		StopWatch watch = new StopWatch();
+		watch.start();
+		cmd = СmdRunner.execute(sshCommandService,cmd,isTest);
+		watch.stop();
+
+		String ajaxString ;
+		if (cmd !=null) 	ajaxString = cmd.toString().replace("\n","<br>").replace("COMMAND:","<b>COMMAND:</b>").replace("VALUES:", "<b>VALUES:</b>");
+		else ajaxString = "<b>EMPTY SSH RESPONSE !!!</b>";
+
+
+		return ajaxString + "<br> <br>  <font size=\"3\" color=\"green\" face=\"Arial\"> Execution time :"+watch.getTotalTimeSeconds()+" seconds </font>";
+	}
 
 	/**
-	 * JS формирует объект через json передает. Метод сериализует объект Wrapper.
+	 * JS формирует объект через json передает. Метод сериализует объект CmdAjax.
 	 * Очень внимательно с версиями Jackson - старая версия упорно не хотела сериализовывать!!!(Хром JS трейсер супер:))
-	 * @param wrapper
+	 * @param cmdAjax
 	 * @return
 	 * @throws IOException
 	 */
 	@RequestMapping(value="/AddUser",  method = RequestMethod.POST)
-	public  @ResponseBody Wrapper addUser(@RequestBody final Wrapper wrapper ) throws IOException {
-		log.info(wrapper.toString());
-		return  wrapper ;
+	public  @ResponseBody
+	CmdAjax execCmdWork(@RequestBody  CmdAjax cmdAjax ) throws IOException {    // return to ajax func. serialized object (dataType='json').
+		log.info("/cmdRecieve execute : "+cmdAjax.toString());
+		NsnCmd nsnCmd =  cmdFactory.createDispVsubCmd(cmdAjax.getNumber());
+
+		//nsnCmd = executeCmd(response, nsnCmd,cmdAjax.getCmdTest());
+		cmdAjax.setCmdResponse(executeCmd(nsnCmd,cmdAjax.getCmdTest()));
+		return cmdAjax;
+
+	}
+
+	@RequestMapping(value="/cmdRecieve",  method = RequestMethod.POST)
+	public  @ResponseBody
+	void execCmd(HttpServletResponse response,@RequestBody  CmdAjax cmdAjax ) throws IOException { // return to ajax func. (dataType='html')
+		log.info("/cmdRecieve execute : "+cmdAjax.toString());
+		NsnCmd nsnCmd = null;
+		//TODO сделать по взрослому (енум или через фабрику)
+		if(cmdAjax.getCmdName().toLowerCase().equals("tempcmd"))
+		nsnCmd =  cmdFactory.createTestCmd();
+
+
+		if(cmdAjax.getCmdName().toLowerCase().equals("vsubcmd"))
+			nsnCmd =  cmdFactory.createDispVsubCmd(cmdAjax.getNumber());
+
+	nsnCmd = executeCmd(response, nsnCmd,cmdAjax.getCmdTest());
 	}
 }
