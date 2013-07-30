@@ -110,7 +110,7 @@
                <%--Very carefull sintacsis : '{"11":"11","22":"22"}'--%>
                 <option value='{"commandHeader":"Поиск абонента","paramName":"MSISDN:","btnName":"Найти","cmdName":"VsubCmd"}'>Найти Абонента</option>
                 <option value='{"commandHeader":"Тестовая Команда","paramName":"AnyParam:","btnName":"Выполнить","cmdName":"TempCmd"}'>Тест Команда</option>
-                   <option value='{"commandHeader":"Неизвестная Команда","paramName":"","btnName":"ЁЖЫКinTheFr@g","cmdName":"UnknownCmd"}'>Тест Команда</option>
+                   <option value='{"commandHeader":"Неизвестная Команда","paramName":"","btnName":"ЁЖЫКinTheFr@g","cmdName":"UnknownCmd"}'>Неизвестная Команда</option>
               </select>
             <div name="comboDiv" id="comboDiv"></div>
         </td>

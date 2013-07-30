@@ -6,7 +6,7 @@ import java.io.Serializable;
  * User: Vladimir
  * Date: 27.06.13
  * Time: 13:38
- * Please describe this stuff
+ * Класс обертка (Wrapper) для принимания аякс объекта от js ф-ии (via JSON Jakson lib)
  */
 public class CmdAjax implements Serializable {
 

@@ -12,13 +12,17 @@
 	<mvc:resources mapping="/resources/**" location="/resources/" /> <!-- не работает при schemaLocation = 3.1 -->
 
 
+	<context:annotation-config />
 	<context:component-scan base-package="com.mscconfig"/>
+	<context:component-scan base-package="com.mscconfig.repository"/>
+
+	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+		<property name="prefix" value="/WEB-INF/pages/"/>
+		<property name="suffix" value=".jsp"/>
+	</bean>
 
 
-    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/pages/"/>
-        <property name="suffix" value=".jsp"/>
-    </bean>
 
     <jpa:repositories base-package="com.mscconfig"/>
 
@@ -32,6 +36,28 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
+	<!--Spring security-->
+	<import resource="security.xml" />
 
+	<!-- I18N BEGIN -->
+
+	<mvc:interceptors>
+		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
+			<property name="paramName" value="lang" />
+		</bean>
+	</mvc:interceptors>
+
+	<bean id="localeResolver"
+		  class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
+	<!-- <property name="defaultLocale" value="en" />   -->
+</bean>
+
+
+<!-- Message locale -->
+	<bean id="messageSource"
+		  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basename" value="classpath:messages" />
+		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
 
 </beans>

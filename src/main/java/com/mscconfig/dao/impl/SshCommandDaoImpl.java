@@ -6,6 +6,10 @@ import com.mscconfig.commands.exceptions.NsnCmdException;
 import com.mscconfig.dao.SshCommandDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
@@ -17,14 +21,29 @@ import java.util.Map;
  * Time: 10:19
  * Реализация ДАО - выполнение комманд
  */
+@Configuration
+@PropertySource("classpath:/ssh.properties")
 @Repository
 public class SshCommandDaoImpl implements SshCommandDao {
 	public static final Logger log = LoggerFactory.getLogger(SshCommandDaoImpl.class);
 	private static SSHClient sshclient;
 	String response;
+	@Autowired //срабатывает только после создания объекта!Не работает в конструкторе и с static fields(null)
+	Environment env;
 
 	public SshCommandDaoImpl() {
-		if(sshclient==null) sshclient = new SSHClient("172.20.127.137", 22, "pronkin", "RT<ft34i");
+	}
+
+	private static void makeSshClient(String ip, Integer port,String  login, String pwd){
+		sshclient = new SSHClient(ip, port, login, pwd);
+	}
+	private  void initSsh(){
+		if(sshclient!=null) return;
+		String ip = env.getProperty("mss.ipadress");
+		Integer port = Integer.valueOf(env.getProperty("ssh.port"));
+		String login = env.getProperty("netact.login");
+		String pwd = env.getProperty("netact.pwd");
+		makeSshClient(ip, port, login, pwd);
 	}
 
 	/**
@@ -34,8 +53,8 @@ public class SshCommandDaoImpl implements SshCommandDao {
 	 */
 	@Override
 	public String executeCmd(String cmd) throws IOException {
-
 		try {
+			initSsh();
 			sshclient.openSession();
 			response = sshclient.executeCmd(cmd);
 			sshclient.closeSession();
@@ -84,6 +103,7 @@ public class SshCommandDaoImpl implements SshCommandDao {
 	@Override
 	public void executeNsnCmd(NsnCmd nsnCmd) throws IOException {
 		try {
+			initSsh();
 			sshclient.openSession();
 			NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
 			while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх)
