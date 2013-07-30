@@ -15,7 +15,7 @@
 			<property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/mscconfig?charset=utf-8" />
 			<property name="hibernate.connection.driver_class" value="org.postgresql.Driver" />
 			<property name="hibernate.connection.username" value="mscconfig" />
-			<property name="hibernate.connection.password" value="qazwsx" />
+			<property name="hibernate.connection.password" value="ENTER PASSWORD HERE" />
 			<property name="hibernate.hbm2ddl.auto" value="update" />
 		</properties>
 
