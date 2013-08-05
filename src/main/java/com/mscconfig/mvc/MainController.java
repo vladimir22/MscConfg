@@ -39,6 +39,10 @@ public class MainController {
 	String login = env.getProperty("netact.login");
 	String pwd = env.getProperty("netact.pwd");*/
 
+	@RequestMapping("/index")
+	public String index() {
+		return "index";
+	}
 
 	@RequestMapping("/")
 	public String home() {
@@ -95,7 +99,7 @@ public class MainController {
 		log.info("INFO MgwData");
 		mgwRepository.save(mgwData);
 		log.warn("WARN MgwData");
-		return "redirect:datadb";
+		return "redirect:/dataPage";
 	}
 
 	@RequestMapping("/deleteMgwData/{mgw_id}")
@@ -103,7 +107,7 @@ public class MainController {
 
 		mgwRepository.delete(mgwRepository.findOne(mgwId));
 
-		return "redirect:datadb";
+		return "redirect:/dataPage";
 	}
 
 	/*--------------cmd.jsp : Страница создания и выполнения комманд ----------------*/

@@ -5,8 +5,6 @@
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page contentType="text/html; charset=UTF-8"%>
 
-
-
 <html>
 <head>
     <meta charset="utf-8">
@@ -17,11 +15,8 @@
 
     <link href="/resources/bootstrap.css" rel="stylesheet">
     <link href="/resources/bootstrap-responsive.css" rel="stylesheet">
+    <link href="/resources/customStyle.css" rel="stylesheet">
     <script src="/resources/jquery-1.9.1.js"></script>
-
-
-
-
 
 </head>
 
@@ -32,6 +27,9 @@
       <!--  MgwData -->
 
     <div class="row">
+        <div class="href-main-page" style=" position:absolute; left:10px; top:10px; text-decoration-color:grey; ">
+            <p><a href="/"><spring:message code="label.mainPage" /></a></p>
+        </div>
         <div class="span8 offset2">
             <h1>Данные MGW</h1>
             <form:form method="post" action="addMgwData" commandName="mgwData" class="form-horizontal">
