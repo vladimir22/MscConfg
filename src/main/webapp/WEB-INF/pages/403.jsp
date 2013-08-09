@@ -4,7 +4,7 @@
 <html>
 <body>
 <spring:message code="label.pageNoAccess" />
-<p><a href="/"><spring:message code="label.mainPage" /></a></p>
-<p><a href="/login"><spring:message code="href.pageLogin" /></a></p>
+<p><a href="index"><spring:message code="label.mainPage" /></a></p>
+<p><a href="login"><spring:message code="href.pageLogin" /></a></p>
 </body>
 </html>

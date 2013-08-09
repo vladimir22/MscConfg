@@ -4,6 +4,8 @@ import com.mscconfig.commands.CmdFactory;
 import com.mscconfig.commands.NsnCmd;
 import com.mscconfig.commands.СmdRunner;
 import com.mscconfig.entities.MgwData;
+import com.mscconfig.repository.MgwDataRepository;
+
 import com.mscconfig.services.SshCommandService;
 import com.mscconfig.temp.CmdAjax;
 import org.json.JSONArray;
@@ -12,32 +14,29 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StopWatch;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Map;
 
 @Configuration
-@PropertySource("classpath:/ssh.properties")
 @Controller
 @SessionAttributes
 public class MainController {
 	public static final Logger log = LoggerFactory.getLogger(MainController.class);
 
-	@Autowired
-	Environment env;
-
-	/*String ip = env.getProperty("mss.ipadress");
-	Integer port = Integer.valueOf(env.getProperty("ssh.port"));
-	String login = env.getProperty("netact.login");
-	String pwd = env.getProperty("netact.pwd");*/
+	@Resource
+	@Qualifier("loggedUserMap")
+	private Map<String, String> loggedUserMap;
 
 	@RequestMapping("/index")
 	public String index() {
@@ -51,7 +50,7 @@ public class MainController {
 
 	/*Spring 3.2.0.Release заработал с spring Security 3.1.4 , только через этот маппинг (3.1.2.RELEASE работало на прямую :( где-то капать надо в web.xml: Dispatcher servlet mapping)  */
 	@RequestMapping("/login")
-	public String login() {
+	public String login(ModelMap model) {
 		return "login";
 	}
 	@RequestMapping("/404")
@@ -157,4 +156,23 @@ public class MainController {
 		response.getWriter().write("<br> <br>  <font size=\"3\" color=\"green\" face=\"Arial\"> Execution time :"+watch.getTotalTimeSeconds()+" seconds </font>");
 		return cmd;
 	}
+
+
+
+	@RequestMapping(value = "/addmgw", method = RequestMethod.POST)
+	public String addContact(@ModelAttribute("contact")
+								 MgwData mgwData, BindingResult result) {
+
+		System.out.println("Name:" + mgwData.getName());
+
+		return "redirect:mgws.html";
+	}
+
+	@RequestMapping("/mgws")
+	public ModelAndView showContacts() {
+
+		return new ModelAndView("mgw-tile", "command", new MgwData());
+	}
+
+
 }

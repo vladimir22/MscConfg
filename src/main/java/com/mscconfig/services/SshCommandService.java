@@ -8,7 +8,7 @@ import java.io.IOException;
  * User: Vladimir
  * Date: 23.05.13
  * Time: 10:53
- * Please describe this stuff
+ * Интерфейс к ссш сервису (нужен т.к. @Autowired вяжет через интерфейсы !)
  */
 public interface SshCommandService {
 	String SERVICE_NAME = "sshCommandService";

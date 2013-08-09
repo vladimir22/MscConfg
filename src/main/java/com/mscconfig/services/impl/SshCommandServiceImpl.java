@@ -4,6 +4,7 @@ import com.mscconfig.commands.NsnCmd;
 import com.mscconfig.dao.SshCommandDao;
 import com.mscconfig.services.SshCommandService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.io.IOException;
  */
 @Service("sshCommandService")
 public class SshCommandServiceImpl implements  SshCommandService {
+	@Qualifier("sshCommandDaoImpl")
 	@Autowired
 	private SshCommandDao sshCommandDao;
 

@@ -9,11 +9,10 @@ import javax.persistence.Table;
 import java.util.Map;
 
 /**
- * Created with IntelliJ IDEA.
  * User: win7srv
  * Date: 14.05.13
  * Time: 12:01
- * To change this template use File | Settings | File Templates.
+ * Хранит данные по MGW
  */
 @Entity
 @Table(name = "mgw_data")

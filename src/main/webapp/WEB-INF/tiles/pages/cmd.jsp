@@ -15,7 +15,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>MscConfig Commands</title>
+    <title><spring:message code="href.pageCmd"/></title>
 
     <link href="resources/styles/bootstrap.css" rel="stylesheet">
     <link href="resources/styles/bootstrap-responsive.css" rel="stylesheet">

@@ -1,0 +1,33 @@
+/*
+ Basic style for template.jsp
+*/
+.header {
+	width: 100%;
+	height:15%;
+}
+.middle {
+	width: 100%;
+	height:70%;
+}
+.menu {
+	width: 10%;
+	float: left;
+}
+.body {
+	left:10%;
+	position: relative;
+	/* только так получилось сместить по нормальному*/
+
+	width: 90%;
+
+}
+
+.footer {
+	width: 100%;
+	height:15%;
+
+}
+
+
+
+

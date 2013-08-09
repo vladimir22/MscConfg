@@ -1,0 +1,28 @@
+<!DOCTYPE tiles-definitions PUBLIC "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN" "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+	<definition name="base.template" template="/WEB-INF/tiles/template.jsp">
+
+		<put-attribute name="header" value="/WEB-INF/tiles/header.jsp" />
+		<put-attribute name="menu" value="/WEB-INF/tiles/menu.jsp" />
+		<put-attribute name="body" value="" />
+		<put-attribute name="footer" value="/WEB-INF/tiles/footer.jsp" />
+	</definition>
+
+	<definition name="mgw-tile" extends="base.template"><!-- name="блабла" - это то что в контроллере return "blabla"-->
+		<put-attribute name="body" value="/WEB-INF/tiles/contact.jsp" />
+	</definition>
+
+
+	<definition name="datadb" extends="base.template">
+		<put-attribute name="body" value="/WEB-INF/tiles/pages/datadb.jsp" />
+	</definition>
+	<definition name="cmd" extends="base.template">
+		<put-attribute name="body" value="/WEB-INF/tiles/pages/cmd.jsp" />
+	</definition>
+
+</tiles-definitions>
+
+
+

@@ -4,14 +4,13 @@ package com.mscconfig.dao.impl;
  * User: Vladimir
  * Date: 23.05.13
  * Time: 10:25
- * Please describe this stuff
+ * CCШ Клиент . Выполняет комманды на НСН(если тестовая - берет готовый ответ из карты)
  */
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
 import com.sshtools.j2ssh.authentication.PasswordAuthenticationClient;
 import com.sshtools.j2ssh.configuration.SshConnectionProperties;
 import com.sshtools.j2ssh.connection.ChannelState;
-import com.sshtools.j2ssh.io.IOStreamConnector;
 import com.sshtools.j2ssh.session.SessionChannelClient;
 import com.sshtools.j2ssh.transport.IgnoreHostKeyVerification;
 import com.sshtools.j2ssh.util.InvalidStateException;
@@ -26,49 +25,66 @@ import org.slf4j.LoggerFactory;
  *
  * @author vv_ilc
  */
-public class SSHClient {
-	public static final Logger log = LoggerFactory.getLogger(SSHClient.class);
+public class SshManager {
+	public static final Logger log = LoggerFactory.getLogger(SshManager.class);
 	private String username;
 	private String password;
-	private String host;
-	private int port;
 	private SshClient sshClient = null;
-
+	private SshConnectionProperties sshConnectionProperties;
 	private SessionChannelClient session;
 	private InputStream outCmdStream;
 	private InputStreamReader outCmdReader;
 	private BufferedReader outCmdBufReader;
 
+	private static SshManager sshManager;
 
 
-	public SSHClient(String host, int port, String userName, String password) {
-		this.host = host;
-		this.port = port;
+	public SshManager(String host, int port, String userName, String password) {
+		sshConnectionProperties = new SshConnectionProperties();
+		sshConnectionProperties.setHost(host);
+		sshConnectionProperties.setPort(port);
 		this.username = userName;
 		this.password = password;
 		sshClient = new SshClient();
 	}
 
+	public static synchronized SshManager getInstance(String host, int port, String userName, String password){
+
+		if  (sshManager==null) {
+			sshManager = new SshManager(host,port, userName, password);
+			return sshManager;
+		}
+		if (!sshManager.getHost().equals(host)) sshManager.setHost(host);
+		if (!sshManager.getPort().equals(port)) sshManager.setPort(port);
+		if (!sshManager.getUsername().equals(userName)) sshManager.setUsername(userName);
+		if (!sshManager.getPassword().equals(password)) sshManager.setUsername(password);
+		return sshManager;
+	}
+
 	private final int authenticate() throws IOException {
-		sshClient.connect(host, new IgnoreHostKeyVerification());
+		sshClient.connect(sshConnectionProperties, new IgnoreHostKeyVerification());
 		PasswordAuthenticationClient pwd = new PasswordAuthenticationClient();
 		pwd.setUsername(username);
 		pwd.setPassword(password);
 		return sshClient.authenticate(pwd);
 	}
 
-	public void openSession() throws IOException {
+	/**
+	 * Открываем соединение
+	 * @throws IOException
+	 */
+	public void openConnection() throws IOException {
+		if (log.isInfoEnabled()) log.info("user:'"+username+"' try connect to host:'"+sshConnectionProperties.getHost()+"', port:'"+sshConnectionProperties.getPort());
 		int result = authenticate();
 		if (result == AuthenticationProtocolState.FAILED)
 			throw new IOException("The authentication failed");
 	   	if (result == AuthenticationProtocolState.PARTIAL)
 			   throw new IOException("The authentication succeeded but another"
 					   + "authentication is required");
-
 		log.info("Authentification success! Start opening Session...");
-
-
 	}
+
+
 
 	/**
 	 * Выполняем комманду через синхронизированный метод
@@ -76,10 +92,9 @@ public class SSHClient {
 	 * @return
 	 * @throws IOException
 	 */
-	public String executeCmd(String cmd) throws IOException {
+	public synchronized String executeCmd(String cmd) throws IOException {
 		if ((cmd == null)||(cmd.isEmpty())) return null;
 		//if (session==null) throw new IOException("Session is not open (null)!!!");
-
 		session = sshClient.openSessionChannel();
 		outCmdStream = session.getInputStream();
 		outCmdReader = new InputStreamReader(outCmdStream);
@@ -87,8 +102,6 @@ public class SSHClient {
 
 		boolean isExecute = session.executeCommand(cmd);
 		if (log.isInfoEnabled()) log.info("-------------session.executeCommand(cmd) = "+isExecute+"-----------------");
-
-
 		char[] cBuf = new char[1024];
 		int bufRead;
 		StringBuilder sb = new StringBuilder();
@@ -118,19 +131,52 @@ public class SSHClient {
 
 	}
 
-	public void closeSession() throws IOException, InterruptedException {
-
-
+	/**
+	 * Закрываем соединение
+	 * @throws IOException
+	 * @throws InterruptedException
+	 */
+	public void closeConnection() throws IOException, InterruptedException {
 		sshClient.disconnect();
+	}
 
+	/* Mutators*/
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getHost() {
+		return sshConnectionProperties.getHost();
+	}
+	public void  setHost(String host) {
+		this.sshConnectionProperties.setHost(host);
+	}
+
+	public Integer getPort() {
+		return sshConnectionProperties.getPort();
+	}
+	public void  setPort(int port) {
+		this.sshConnectionProperties.setPort(port);
 	}
 
 
+
+
+
+   /* Темповые методы*/
 	public StringBuilder execute(String cmd) throws IOException, InterruptedException {
-
-
-
-
 		StringBuilder sb = new StringBuilder();
 
 
@@ -220,16 +266,12 @@ public class SSHClient {
 			}
 
 		}
-
-
-
-
-		session.close();
+ 		session.close();
 		session.getState().waitForState(ChannelState.CHANNEL_CLOSED);
 		sshClient.disconnect();
 
-
 		return searchParams;
+ 	}
 
-	}
+
 }

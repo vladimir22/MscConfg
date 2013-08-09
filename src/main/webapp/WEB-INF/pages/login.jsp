@@ -10,7 +10,7 @@
 </head>
 <body>
 
-<a href="<c:url value="/" />">
+<a href="<c:url value="index" />">
 	<spring:message code="label.mainPage" />
 </a><br/>
 

@@ -9,7 +9,7 @@ import java.io.IOException;
  * User: Vladimir
  * Date: 23.05.13
  * Time: 10:17
- * Please describe this stuff
+ * Интерфейс к ссш Дао , для SshCommandService
  */
 public interface SshCommandDao {
 	String executeCmd(String cmd) throws IOException;

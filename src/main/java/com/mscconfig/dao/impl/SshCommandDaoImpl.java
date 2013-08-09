@@ -13,7 +13,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 /**
  * User: Vladimir
@@ -26,7 +25,7 @@ import java.util.Map;
 @Repository
 public class SshCommandDaoImpl implements SshCommandDao {
 	public static final Logger log = LoggerFactory.getLogger(SshCommandDaoImpl.class);
-	private static SSHClient sshclient;
+
 	String response;
 	@Autowired //срабатывает только после создания объекта!Не работает в конструкторе и с static fields(null)
 	Environment env;
@@ -34,16 +33,12 @@ public class SshCommandDaoImpl implements SshCommandDao {
 	public SshCommandDaoImpl() {
 	}
 
-	private static void makeSshClient(String ip, Integer port,String  login, String pwd){
-		sshclient = new SSHClient(ip, port, login, pwd);
-	}
-	private  void initSsh(){
-		if(sshclient!=null) return;
-		String ip = env.getProperty("mss.ipadress");
+	private  SshManager getSshManager(){
+		String host = env.getProperty("mss.ipadress");
 		Integer port = Integer.valueOf(env.getProperty("ssh.port"));
-		String login = env.getProperty("netact.login");
-		String pwd = env.getProperty("netact.pwd");
-		makeSshClient(ip, port, login, pwd);
+		String userName = env.getProperty("netact.login");
+		String password = env.getProperty("netact.pwd");
+		return SshManager.getInstance(host, port, userName, password);
 	}
 
 	/**
@@ -54,15 +49,41 @@ public class SshCommandDaoImpl implements SshCommandDao {
 	@Override
 	public String executeCmd(String cmd) throws IOException {
 		try {
-			initSsh();
-			sshclient.openSession();
-			response = sshclient.executeCmd(cmd);
-			sshclient.closeSession();
+			SshManager sshManager = getSshManager();
+			sshManager.openConnection();
+			response = sshManager.executeCmd(cmd);
+			sshManager.closeConnection();
 		}  catch (InterruptedException e) {
 			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
 		}
 		return response;  //To change body of implemented methods use File | Settings | File Templates.
 	}
+    /**
+	 * Выполняет комманду (и все вложенные тоже).Наполняем значениями весть стэк комманд
+	 * @param nsnCmd
+	 */
+	@Override
+	public void executeNsnCmd(NsnCmd nsnCmd) throws IOException {
+		try {
+			SshManager sshManager = getSshManager();
+			sshManager.openConnection();
+			NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
+			while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх)
+				String response = sshManager.executeCmd(cmd.getCompletedCmd());
+
+				for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту NsnCmd объекта
+					val.getValue().fillData(response);
+					log.info(val.toString());
+				}
+				cmd = cmd.getParentCmd();   // если отца нет выходим из цикла
+			}
+			sshManager.closeConnection();
+		} catch (InterruptedException e) {
+			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+		}
+	}
+
+
 
 	/**
 	 * Тестовое(оффлайн) выполнение ssh комманды
@@ -75,6 +96,7 @@ public class SshCommandDaoImpl implements SshCommandDao {
 		return SSHClientTest.cmdMap.get(cmd);
 	}
 
+
 	/**
 	 * Тестовое выполнение НСН Комманды
 	 * @param nsnCmd
@@ -84,11 +106,11 @@ public class SshCommandDaoImpl implements SshCommandDao {
 	@Deprecated
 	public void executeTestNsnCmd(NsnCmd nsnCmd) throws IOException {
 		NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
-    	while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх) до объекта nsnCmd
+		while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх) до объекта nsnCmd
 			String completedCmd =  cmd.getCompletedCmd();
 			String response = SSHClientTest.cmdMap.get(completedCmd);
 			if (response==null) throw new IOException("Unknown command for SSHClientTest map :"+completedCmd);
-    		for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту
+			for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту
 				val.getValue().fillData(response);
 				//log.info(val.toString());
 			}
@@ -96,28 +118,4 @@ public class SshCommandDaoImpl implements SshCommandDao {
 		}
 	}
 
-	/**
-	 * Выполняет комманду (и все вложенные тоже).Наполняем значениями весть стэк комманд
-	 * @param nsnCmd
-	 */
-	@Override
-	public void executeNsnCmd(NsnCmd nsnCmd) throws IOException {
-		try {
-			initSsh();
-			sshclient.openSession();
-			NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
-			while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх)
-				String response = sshclient.executeCmd(cmd.getCompletedCmd());
-
-				for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту NsnCmd объекта
-					val.getValue().fillData(response);
-					log.info(val.toString());
-				}
-				cmd = cmd.getParentCmd();   // если отца нет выходим из цикла
-			}
-			sshclient.closeSession();
-		} catch (InterruptedException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
-	}
 }

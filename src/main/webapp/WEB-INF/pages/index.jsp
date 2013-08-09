@@ -10,7 +10,7 @@
 <body>
 <h2><spring:message code="label.mainPageTitle" /></h2>
 <br>
-<p><a href="/dataPage"><spring:message code="href.pageDataDB"/></a></p>
-<p><a href="/cmdPage"><spring:message code="href.pageCmd"/></a></p>
+<p><a href="dataPage"><spring:message code="href.pageDataDB"/></a></p>
+<p><a href="cmdPage"><spring:message code="href.pageCmd"/></a></p>
 </body>
 </html>

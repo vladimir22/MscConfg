@@ -6,20 +6,29 @@
            http://www.springframework.org/schema/security
            http://www.springframework.org/schema/security/spring-security-3.1.xsd">
 
+	<http pattern="/login" security="none"/>
 	<http access-denied-page="/403">
+		<!--<intercept-url pattern="/*" access="ROLE_ADMIN,ROLE_USER" />-->
 		<intercept-url pattern="/cmdPage*" access="ROLE_ADMIN" />
-		<intercept-url pattern="/dataPage*" access="ROLE_ADMIN,ROLE_USER" />
+		<intercept-url pattern="/dataPage*" access="ROLE_USER" />
 		<intercept-url pattern="/delete/*" access="ROLE_ADMIN" />
 
-		<form-login login-page="/login" default-target-url="/index"
-					authentication-failure-url="/login?error=true" />
+		<form-login login-page="/login"
+			authentication-success-handler-ref="customLoginSuccessHandler"
+			default-target-url="/index"
+			authentication-failure-url="/login?error=true" />
 
-		<logout logout-url="/logout" logout-success-url="/login" />
+		<!-- Кастомный логаут -->
+		<logout logout-url="/logout" success-handler-ref="customLogoutSuccessHandler" />
+
+		<!-- Обычный логаут -->
+		<!--<logout logout-url="/logout" logout-success-url="/login" />-->
 
 		<anonymous username="guest" granted-authority="ROLE_ANONYMOUS" />
 		<remember-me />
 	</http>
 
+	<!--Создаем юзеров руками-->
 	<!--<authentication-manager>
 		<authentication-provider>
 			<user-service>
@@ -30,7 +39,7 @@
 		</authentication-provider>
 	</authentication-manager>-->
 
-
+	<!--вытягиваем юзеров из БД напрямую (jdbc)-->
 <!--	<authentication-manager>
 		<authentication-provider>
 			<jdbc-user-service data-source-ref="entityManagerFactory"
@@ -47,10 +56,21 @@
 		</authentication-provider>
 	</authentication-manager>-->
 
+
+	<!--через кастомный сервис вытягиваем из JPA DB  юзера-->
 	<authentication-manager>
 		<authentication-provider user-service-ref="customUserDetailsService">
 			<password-encoder hash="md5"/>
 		</authentication-provider>
 	</authentication-manager>
+
+
+
+
+
+
+
+
+
 
 </beans:beans>

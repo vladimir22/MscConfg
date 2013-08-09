@@ -4,6 +4,6 @@
 <html>
 <body>
 <spring:message code="label.pageNotFound" />
-<p><a href="/"><spring:message code="label.mainPage" /></a></p>
+<p><a href="index"><spring:message code="label.mainPage" /></a></p>
 </body>
 </html>

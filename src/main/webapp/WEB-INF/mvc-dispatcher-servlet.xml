@@ -11,20 +11,36 @@
 	<mvc:annotation-driven />
 	<mvc:resources mapping="/resources/**" location="/resources/" /> <!-- не работает при schemaLocation = 3.1 -->
 
-
+	<!--Cканируем аннотации в пакетах-->
 	<context:annotation-config />
 	<context:component-scan base-package="com.mscconfig"/>
 	<context:component-scan base-package="com.mscconfig.repository"/>
 
+
+
+<!--ViewResolver через Tiles3 - при запросе в контроллере "блабла"  идем в tiles.xml ищем <definition name="блабла"...  в кот. указывается шаблон и какую страницу отоброжать  -->
+	<bean id="tilesViewResolver1" class="org.springframework.web.servlet.view.UrlBasedViewResolver" >
+		<property name="order" value="1"/>
+		<property name="viewClass" value="org.springframework.web.servlet.view.tiles3.TilesView"/>
+	</bean>                           <!--Don't add suffix or prefix like you do with .jsp files-->
+
+	<bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles3.TilesConfigurer" >
+		<property name="definitions">
+			<value>/WEB-INF/tiles.xml</value>
+		</property>
+	</bean>
+
+<!--Дефолтовый ViewResolver - тупо при запросе "блабла" ищет файл /WEB-INF/pages/блабла.jsp -->
 	<bean id="jspViewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="order" value="2"/>    <!--Если в tiles не нашлось ищем по дефолту-->
 		<property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
 		<property name="prefix" value="/WEB-INF/pages/"/>
 		<property name="suffix" value=".jsp"/>
 	</bean>
 
 
-
-    <jpa:repositories base-package="com.mscconfig"/>
+<!-- JpaRepository интерфейсы для прикольного(через имя метода в интефейсе) получ. сущностей из БД-->
+	<jpa:repositories base-package="com.mscconfig"/>
 
     <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalEntityManagerFactoryBean">
         <property name="persistenceUnitName" value="defaultPersistenceUnit"/>
@@ -36,11 +52,9 @@
 
     <tx:annotation-driven transaction-manager="transactionManager"/>
 
-	<!--Spring security-->
-	<import resource="security.xml" />
+
 
 	<!-- I18N BEGIN -->
-
 	<mvc:interceptors>
 		<bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor">
 			<property name="paramName" value="lang" />
@@ -58,6 +72,19 @@
 		  class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
 		<property name="basename" value="classpath:messages" />
 		<property name="defaultEncoding" value="UTF-8" />
+	</bean>
+
+
+	<!--Spring security-->
+	<import resource="security.xml" />
+	 <!--Bean-карта в кот. будет хранится доп. инфо юзера-->
+	<bean id="loggedUserMap" class="java.util.HashMap"  >
+		<constructor-arg>
+			<map key-type="java.lang.String" value-type="java.lang.String">
+				<entry key="firstName" value="" />
+				<entry key="lastName" value="" />
+			</map>
+		</constructor-arg>
 	</bean>
 
 </beans>

@@ -8,8 +8,6 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>MscConfig Application</title>
-
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -18,22 +16,15 @@
     <link href="resources/styles/customStyle.css" rel="stylesheet">
     <script src="resources/styles/jquery-1.9.1.js"></script>
 
+    <title><spring:message code="href.pageDataDB"/></title>
 </head>
 
 <body>
 
 <div class="container">
-                 <%--Эта страница не проходит через MainController проходит tiles/pages/datadb.jsp--%>
-      <!--  MgwData -->
 
     <div class="row">
-        <div class="href-main-page" style=" position:absolute; left:10px; top:10px; text-decoration-color:grey; ">
-            <p><a href="index"><spring:message code="label.mainPage" /></a></p>
-        </div>
 
-
-
-        </div>
         <div class="span8 offset2">
             <h1>Данные MGW</h1>
             <form:form method="post" action="addMgwData" commandName="mgwData" class="form-horizontal">

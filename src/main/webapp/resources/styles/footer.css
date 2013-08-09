@@ -1,13 +1,11 @@
 /*
-My own style
+style for footer.jsp
 */
 
-.href-main-page{
-	position: absolute;
-	top: 10px; left:10px;
-}
 
 .href-main-page a{
+	position: relative;
+	left:10px;
 	padding: 0px 5px 0px 5px;
 	font-size: 0.9em;
 	background: #003bb3;
@@ -17,7 +15,7 @@ My own style
 
 	margin: 0px 0px 0px 0px;
 	overflow: hidden;
-	display: block;
+	display: inline-block;  /*если просто display:block;-ссылка растягивается на всю ширь*/
 	font-family: Tahoma;
 	text-decoration: none;
 	text-align: center;
