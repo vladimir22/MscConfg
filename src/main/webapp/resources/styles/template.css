@@ -1,33 +1,180 @@
 /*
  Basic style for template.jsp
 */
+.main-body{
+	font-family: Tahoma;
+	font-size: 14px;
+}
+
+p{
+	float:left;
+	margin: 4px;
+}
+
+.clear-float{
+	clear:left;
+}
+/* Хром по умолчанию подсвечивает поля . Заставляем его не подсвечивать */
+input[type="text"], input[type="password"], textarea, select {
+	float:left;
+	outline: none;
+	/*закругленные углы*/
+	-webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+input[type="submit"] {
+	float:left;
+	cursor:pointer;
+}
+
+/* Подсветка голубеньким полей ввода*/
+   input:focus, textarea:focus {
+	border:#33bef6 1px solid; /* Цвет фона */
+	box-shadow: 0 0 5px #33bef6; /*Параметры тени */
+	-webkit-box-shadow: 0 0 5px #33bef6; /*Для Safari и Chrome*/
+	-moz-box-shadow: 0 0 5px #33bef6; /* Для Firefox*/
+	  /* Transition*/
+	   /*-webkit-transition: All 0.5s ease;*/
+	   -moz-transition: All 0.8s ease;
+	   -o-transition: All 0.8s ease;
+	   -ms-transition: All 0.8s ease;
+	  /* transition: All 0.8s ease;*/
+}
+
+
+:focus { background-color: #fff; }
+
+
+
 .header {
 	width: 100%;
-	height:15%;
+	height:10%;
 }
 .middle {
 	width: 100%;
-	height:70%;
+	height:80%;
 }
 .menu {
+	display:none;
 	width: 10%;
 	float: left;
 }
 .body {
-	left:10%;
+	/*left:10%;*/
 	position: relative;
 	/* только так получилось сместить по нормальному*/
-
-	width: 90%;
+	width: 100%;
 
 }
 
 .footer {
 	width: 100%;
-	height:15%;
-
+	height:10%;
+	clear: left;
 }
 
 
 
+.href-button a,input[type=button]{
+	float:left;
+	padding: 0px 5px 0px 5px;
+	font-size: 0.9em;
 
+	border: 2px solid #eee;
+
+
+
+	margin: 0px 0px 0px 0px;
+	overflow: hidden;
+	display: inline-block;  /*если просто display:block;-ссылка растягивается на всю ширь*/
+	font-family: Tahoma;
+	text-decoration: none;
+	text-align: center;
+	/*закругленные углы*/
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	/*градиент*/
+	background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+	background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+	background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+	background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+	background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
+	/*тень*/
+	-webkit-box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
+	/*Transition*/
+	-webkit-transition: All 0.5s ease;
+	-moz-transition: All 0.5s ease;
+	-o-transition: All 0.5s ease;
+	-ms-transition: All 0.5s ease;
+	transition: All 0.5s ease;
+}
+
+.href-button a.blue-color, input[type=button].blue-color{
+	color:#fff;
+	background: #003bb3;
+}
+
+.href-button a.blue-color:hover, input[type=button].blue-color:hover{
+	background-color: #4bb1cf;
+}
+
+.href-button a.red-color, input[type=button].red-color{
+	color:#fff;
+	background: #ba1c14;
+}
+
+.href-button a.red-color:hover, input[type=button].red-color:hover{
+	background-color: #f96c66;
+}
+
+.href-button a.yellow-color, input[type=button].yellow-color{
+	color:#fff;
+	background: #cab824;
+}
+
+.href-button a.yellow-color:hover, input[type=button].yellow-color:hover{
+	background-color: #f7dd06;
+}
+
+
+.div-shadow-layer1 {
+	z-index: 2;
+	opacity:0;
+	/*градиент*/
+	background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+	background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+	background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+	background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+	background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1));
+
+	/*Transition*/
+	-webkit-transition: All 0.5s ease;
+	-moz-transition: All 0.5s ease;
+	-o-transition: All 0.5s ease;
+	-ms-transition: All 0.5s ease;
+	transition: All 0.5s ease;
+}
+.div-shadow-layer1 div {
+	/*visibility: hidden;*/
+}
+.div-shadow-layer1:hover{
+	opacity:1;
+	/*закругленные углы*/
+	-webkit-border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-radius: 10px;
+	/*тень*/
+	-webkit-box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
+	box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
+}
+
+.div-shadow-layer2 {
+	z-index:1;
+	opacity:1;
+}

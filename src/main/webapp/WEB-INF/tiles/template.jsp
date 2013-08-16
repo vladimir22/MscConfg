@@ -15,7 +15,7 @@
     <link href="resources/styles/template.css" rel="stylesheet">
     <%--<title> Подхватит из боди.jsp </title>--%>
 </head>
-<body>
+<body class="main-body">
 <div class="header">
     <tiles:insertAttribute name="header" />
 </div>

@@ -18,9 +18,9 @@ public class СmdRunner {
 
 	public static final Logger log = LoggerFactory.getLogger(СmdRunner.class);
 
-	public static NsnCmd execute(SshCommandService sshCommandService,NsnCmd nsnCmd,boolean isTest){
+	public static NsnCmd execute(SshCommandService sshCommandService,NsnCmd nsnCmd,boolean isTest) throws IOException {
 
-		try {
+
 			if (isTest) sshCommandService.executeTestNsnCmd(nsnCmd);  // наполняем значениями
 			else{
 				sshCommandService.executeNsnCmd(nsnCmd);
@@ -29,9 +29,7 @@ public class СmdRunner {
 			log.info(nsnCmd.toString());
 			log.info("+++++++++++++++++++++++++ NsnCmd End +++++++++++++++++++++++++++");
 
-		} catch (IOException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-		}
+
 		return nsnCmd;
 	}
 }

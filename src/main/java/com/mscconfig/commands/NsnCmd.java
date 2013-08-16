@@ -23,6 +23,7 @@ public class NsnCmd {
 	private Map<String,Param> values = new LinkedHashMap<>(); // значения
 	private NsnCmd preCmd;   // преКоманда в значения которой (%value%) нужны для выполнения команды
 	private NsnCmd parentCmd;
+	private String fullText;
 
 	public void addValue(String name, Param param) throws NsnCmdException {
 		if (param==null)  throw new NsnCmdException("Parameter isNull !!!");
@@ -137,5 +138,17 @@ public class NsnCmd {
 		}
 		sb.append("parentCmd=").append(parentName);
 		return sb.toString();
+	}
+
+	public String getFullText() {
+		StringBuffer allText = new StringBuffer();
+		if(parentCmd!=null) allText.append(parentCmd.getFullText());
+		allText.append(this.fullText).append('\n');
+
+		return allText.toString();
+	}
+
+	public void setFullText(String fullText) {
+		this.fullText = fullText;
 	}
 }

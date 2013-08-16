@@ -3,6 +3,7 @@ style for footer.jsp
 */
 
 
+/*
 .href-main-page a{
 	position: relative;
 	left:10px;
@@ -15,25 +16,35 @@ style for footer.jsp
 
 	margin: 0px 0px 0px 0px;
 	overflow: hidden;
-	display: inline-block;  /*если просто display:block;-ссылка растягивается на всю ширь*/
+	display: inline-block;  */
+/*если просто display:block;-ссылка растягивается на всю ширь*//*
+
 	font-family: Tahoma;
 	text-decoration: none;
 	text-align: center;
-	/*закругленные углы*/
+	*/
+/*закругленные углы*//*
+
 	-webkit-border-radius: 10px;
 	-moz-border-radius: 10px;
 	border-radius: 10px;
-	/*градиент*/
+	*/
+/*градиент*//*
+
 	background-image: -webkit-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
 	background-image: -moz-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
 	background-image: -o-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
 	background-image: -ms-linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
 	background-image: linear-gradient(top, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.2));
-	/*тень*/
+	*/
+/*тень*//*
+
 	-webkit-box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
 	-moz-box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
 	box-shadow: 3px 3px 1px rgba(0, 0, 0, 0.2);
-	/*Transition*/
+	*/
+/*Transition*//*
+
 	-webkit-transition: All 0.5s ease;
 	-moz-transition: All 0.5s ease;
 	-o-transition: All 0.5s ease;
@@ -43,4 +54,4 @@ style for footer.jsp
 
 .href-main-page a:hover {
 	background-color: #4bb1cf;
-}
+}*/

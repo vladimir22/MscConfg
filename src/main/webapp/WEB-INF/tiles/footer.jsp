@@ -14,8 +14,8 @@
 <body>
 
 
-<div class="href-main-page">
-    <p><a href="index"><spring:message code="label.mainPage" /></a></p>
+<div class="href-button">
+    <a class="blue-color" href="index"><spring:message code="label.mainPage" /></a>
 </div>
 
 </body>

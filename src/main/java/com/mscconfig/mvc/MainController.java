@@ -33,6 +33,8 @@ import java.util.Map;
 @SessionAttributes
 public class MainController {
 	public static final Logger log = LoggerFactory.getLogger(MainController.class);
+	NsnCmd nsnCmd;
+
 
 	@Resource
 	@Qualifier("loggedUserMap")
@@ -130,7 +132,7 @@ public class MainController {
 	public  @ResponseBody
 	void execCmd(HttpServletResponse response,@RequestBody  CmdAjax cmdAjax ) throws IOException { // return to ajax func. (dataType='html')
 		log.info("/cmdRecieve execute : "+cmdAjax.toString());
-		NsnCmd nsnCmd = null;
+		nsnCmd = null;
 		//TODO сделать по взрослому (енум или через фабрику)
 		if(cmdAjax.getCmdName().toLowerCase().equals("tempcmd"))
 		nsnCmd =  cmdFactory.createTestCmd();
@@ -143,18 +145,44 @@ public class MainController {
 	private NsnCmd executeCmd(HttpServletResponse response, NsnCmd cmd, Boolean isTest) throws IOException {
 		StopWatch watch = new StopWatch();
 		watch.start();
-		String ajaxString ;
-		if(cmd==null) ajaxString = "<b>NO SSH RESPONSE !!!</b>";
-		else{
-			cmd = СmdRunner.execute(sshCommandService,cmd,isTest);
-			ajaxString = cmd.toString().replace("\n","<br>").replace("COMMAND:","<b>COMMAND:</b>").replace("VALUES:", "<b>VALUES:</b>");
-		}
-		watch.stop();
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html");
+		String ajaxString ;
+			if(cmd==null) ajaxString = "<b>Command not found!!!</b>";
+			else{
+				try{
+				cmd = СmdRunner.execute(sshCommandService,cmd,isTest);
+				ajaxString = cmd.toString().replace("\n","<br>").replace("COMMAND:","<b>COMMAND:</b>").replace("VALUES:", "<b>VALUES:</b>");
+				ajaxString += "<br> <div class='full-text'> <input type='button' onclick=\"showFullText()\"  class=\"href-button yellow-color\" value =\"Show full log\"/> </div>";
+				}catch (IOException e) {
+					ajaxString ="<div > <span class='blink'> <p> Catch exception: </p> </span> <span class='blink'> <p>' "+e.getMessage()+"'</p> </span> </div>";
+					e.printStackTrace();
+				}
+			}
+		watch.stop();
+
 		response.getWriter().write(ajaxString);
-		response.getWriter().write("<br> <br>  <font size=\"3\" color=\"green\" face=\"Arial\"> Execution time :"+watch.getTotalTimeSeconds()+" seconds </font>");
+		response.getWriter().write("<br> <br> <span class='duration-time'> Execution time :"+watch.getTotalTimeSeconds()+" seconds </span>");
 		return cmd;
+	}
+
+	/**
+	 * Возвращает полный вывод ssh комадны
+	 * @param response
+	 * @param cmdName
+	 * @throws IOException
+	 */
+	@RequestMapping(value="/cmdPage/getFullText",  method = RequestMethod.GET)
+	public  @ResponseBody
+	void returncmdFullText(HttpServletResponse response,@RequestBody  String cmdName ) throws IOException { // return to ajax func. (dataType='html')
+		if(log.isInfoEnabled()) log.info("/cmdPage/getFullText execute : "+cmdName);
+
+		response.setCharacterEncoding("utf-8");
+		response.setContentType("text/html");
+		String ajaxString;
+		if(nsnCmd != null) ajaxString = nsnCmd.getFullText().toString().replace("\n","<br>");
+		else ajaxString = "<b>Command not found!!!</b>";
+		response.getWriter().write(ajaxString);
 	}
 
 

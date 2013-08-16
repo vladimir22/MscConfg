@@ -3,21 +3,21 @@ style for header.jsp
 */
 
 .logged-username{
-	position: relative;
-	top: 10px; right:10px;
+
+	padding: 10px 0 0 20px;
 	text-align: right;
 
 }
 
 .logged-username .user-name{
 	font-size: 1em;
-	color: #FFFFFF;
-	text-shadow: -1px -1px 2px #FFFFFF, 2px 2px 1px #3D7DF3;
+	color: #3D7DF3;
+	text-shadow: -1px -1px 2px #FFFFFF, 2px 2px 1px #5bc0de;
 	text-shadow:
 		/*-2px -2px 2px #003bb3,*/
 
 		/*-2px 0px 2px #003bb3, 2px 0px 2px #3D7DF3,0px 2px 2px #3D7DF3, 0px -2px 2px #3D7DF3,*/
-		-4px 0px 10px #3D7DF3, 4px 0px 10px #3D7DF3,0px 4px 10px #3D7DF3, 0px -4px 10px #3D7DF3;
+		-4px 0px 10px #5bc0de, 4px 0px 10px #5bc0de,0px 4px 10px #5bc0de, 0px -4px 10px #5bc0de;
 	/*-10px 0px 10px #3D7DF3, 10px 0px 10px #3D7DF3,0px 10px 10px #3D7DF3, 0px -10px 10px #3D7DF3,
 	20px 0px 10px #3D7DF3, -20px 0px 10px #3D7DF3,0px 20px 10px #3D7DF3, 0px -20px 10px #3D7DF3;
 	*/

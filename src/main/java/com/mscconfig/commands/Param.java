@@ -39,14 +39,14 @@ public class Param {
 			i++;
 		}
 		if (i>1)
-			log.warn(new StringBuilder("Found in text='").append(text)
+			log.warn(new StringBuilder("Found in response='").append(text)
 					.append("', regexp='").append(regexp).append("' many matches =").append(i).append(" !!!").toString());
 
 		return value;
 	}
 
-	public void fillData(String text){
-		String value =   regexpProcess(text, regexList.get(0), false);
+	public void fillData(String response){
+		String value =   regexpProcess(response, regexList.get(0), false);
 		 for(int i=1; i<regexList.size();i++){
 			 value =   regexpProcess(value, regexList.get(i), true);
 		 }

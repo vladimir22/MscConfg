@@ -70,10 +70,11 @@ public class SshCommandDaoImpl implements SshCommandDao {
 			NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
 			while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх)
 				String response = sshManager.executeCmd(cmd.getCompletedCmd());
-
+				if(log.isInfoEnabled()) log.info("executed command :"+ cmd.getCompletedCmd());
 				for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту NsnCmd объекта
+					cmd.setFullText(response);
 					val.getValue().fillData(response);
-					log.info(val.toString());
+					//log.info(val.toString());
 				}
 				cmd = cmd.getParentCmd();   // если отца нет выходим из цикла
 			}
@@ -111,6 +112,7 @@ public class SshCommandDaoImpl implements SshCommandDao {
 			String response = SSHClientTest.cmdMap.get(completedCmd);
 			if (response==null) throw new IOException("Unknown command for SSHClientTest map :"+completedCmd);
 			for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту
+				cmd.setFullText(response);
 				val.getValue().fillData(response);
 				//log.info(val.toString());
 			}

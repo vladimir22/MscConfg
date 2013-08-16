@@ -1,0 +1,161 @@
+.show-hide{
+	display:none;
+}
+
+.div-title{
+	width:100%;
+	text-align: center;
+}
+.div-title span{
+	display: inline-block;
+	vertical-align: middle;
+	color:#e1b008;
+	line-height: normal;
+}
+.div-body{
+	width:100%;
+	margin: 0 auto;
+
+}
+
+.cmd-view {
+	position: relative;
+
+	width:auto;
+	float:left;
+}
+.cmd-view .div-body{
+	text-align: center;
+}
+
+.cmd-view .div-body .test-div{
+	width: 80px;
+	margin: 0 0 0 30%;
+
+}
+.cmd-view .div-body .test-div input{
+	margin: 3px 0 0 0;
+
+}
+
+.cmd-response{
+	display: none;
+	margin: 10px 0 0 200px;
+	float:left;
+	font-size:0.9em;
+	max-width: 500px;
+	clear:left;
+	position:absolute;
+	top: 70px;
+	left: -30px;
+
+}
+.cmd-fulltext {
+	position: relative;
+	width:auto;
+	float:right;
+	font-size:0.8em;
+	margin:0;
+}
+
+
+
+.exception .title p  {
+	font-size: 0.8em;
+	color: #fa837d;
+}
+.exception .cause p  {
+	font-size: 1em;
+	font-family: Tahoma;
+	color: #980b04;
+	text-shadow:0px 0px 5px #FFFFFF,-4px 0px 10px #f94a41, 4px 0px 10px #f94a41,0px 4px 10px #f94a41, 0px -4px 10px #f94a41;
+	/*Transition*/
+	-webkit-transition: All 0.8s ease;
+	-moz-transition: All 0.8s ease;
+	-o-transition: All 0.8s ease;
+	-ms-transition: All 0.8s ease;
+	transition: All 0.8s ease;
+}
+.exception .cause p:hover {
+	font-size: 1em;
+	font-family: Tahoma;
+	color: #e95149;
+	text-shadow:0px 0px 5px #FFFFFF,-4px 0px 10px #fcb6b3, 4px 0px 10px #fcb6b3,0px 4px 10px #fcb6b3, 0px -4px 10px #fcb6b3;
+}
+.full-text input{
+	width:auto;
+}
+.duration-time {
+	color:green;
+}
+
+@keyframes blink {
+	0% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #940b00;
+	}
+	25% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #980b04;
+		text-shadow:0px 0px 5px #FFFFFF,-4px 0px 10px #f94a41, 4px 0px 10px #f94a41,0px 4px 10px #f94a41, 0px -4px 10px #f94a41;
+	}
+	50% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #e95149;
+		text-shadow:0px 0px 5px #FFFFFF,-20px 0px 30px #fcb6b3, 20px 0px 30px #fcb6b3,0px 20px 30px #fcb6b3,  0px -20px 30px #fcb6b3;
+	}
+	75% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #980b04;
+		text-shadow:0px 0px 5px #FFFFFF,-4px 0px 10px #f94a41, 4px 0px 10px #f94a41,0px 4px 10px #f94a41, 0px -4px 10px #f94a41;
+	}
+
+	100% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #940b00;
+	}
+
+}
+@-webkit-keyframes blink {
+	0% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #940b00;
+	}
+	25% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #980b04;
+		text-shadow:0px 0px 5px #FFFFFF,-4px 0px 10px #f94a41, 4px 0px 10px #f94a41,0px 4px 10px #f94a41, 0px -4px 10px #f94a41;
+	}
+	50% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #e95149;
+		text-shadow:0px 0px 5px #FFFFFF,-20px 0px 30px #fcb6b3, 20px 0px 30px #fcb6b3,0px 20px 30px #fcb6b3,  0px -20px 30px #fcb6b3;
+	}
+	75% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #980b04;
+		text-shadow:0px 0px 5px #FFFFFF,-4px 0px 10px #f94a41, 4px 0px 10px #f94a41,0px 4px 10px #f94a41, 0px -4px 10px #f94a41;
+	}
+
+	100% {
+		font-size: 1em;
+		font-family: Tahoma;
+		color: #940b00;
+	}
+}
+.blink p {
+	-webkit-animation: blink 3s linear infinite;
+	-moz-animation: blink 3s linear infinite;
+	-ms-animation: blink 3s linear infinite;
+	-o-animation: blink 3s linear infinite;
+	animation: blink 3s linear infinite;
+}

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * User: Vladimir
@@ -23,15 +24,17 @@ public class CustomLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler {
 	public static final Logger log = LoggerFactory.getLogger(CustomLogoutSuccessHandler.class);
 	@Override
 	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response,
-								Authentication authentication) throws IOException, ServletException {
+								Authentication auth) throws IOException, ServletException {
 
-		if (authentication != null) {
+		if (auth != null) {
 			HttpSession session = request.getSession();
+			CustomUserDetails customUserDetails =(CustomUserDetails) auth.getPrincipal();
+			if(log.isInfoEnabled()) log.info("Logout success for USER: '"+customUserDetails.getUsername()+"' - "+customUserDetails.getFirstName()+" "+customUserDetails.getLastName());
 			session.removeAttribute("loggedUserMap");
-			if(log.isInfoEnabled()) log.info("session attribute loggedUserMap removed.");
+
 		}
 
 		setDefaultTargetUrl("/login");
-		super.onLogoutSuccess(request, response, authentication);
+		super.onLogoutSuccess(request, response, auth);
 	}
 }

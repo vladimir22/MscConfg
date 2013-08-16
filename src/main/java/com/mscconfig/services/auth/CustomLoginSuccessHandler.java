@@ -36,13 +36,17 @@ public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
 			CustomUserDetails customUserDetails =(CustomUserDetails) auth.getPrincipal();
 
+			String username = customUserDetails.getUsername();
+			String firstName = customUserDetails.getFirstName();
+			String lastName = customUserDetails.getLastName();
+
 			Map<String, String> loggedUserMap =  new HashMap<String, String>();
-          	loggedUserMap.put("firstName",customUserDetails.getFirstName());
-			loggedUserMap.put("lastName", customUserDetails.getLastName());
+			loggedUserMap.put("firstName",firstName);
+			loggedUserMap.put("lastName", lastName);
 
 			HttpSession session = request.getSession();
 			session.setAttribute("loggedUserMap", loggedUserMap);
-			if(log.isInfoEnabled()) log.info("added session attribute: loggedUserMap = " + loggedUserMap);
+			if(log.isInfoEnabled()) log.info("Login success for USER: '"+username+"' - "+firstName+" "+lastName);
 		}
 		super.onAuthenticationSuccess(request, response, authentication);
 	}
