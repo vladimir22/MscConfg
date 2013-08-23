@@ -23,7 +23,7 @@
 <body>
 
 <div class="container">
-                 <%--Эта страница не проходит через MainController проходит tiles/pages/datadb.jsp--%>
+                 <%--Эта страница не проходит через AbstractController проходит tiles/pages/datadb.jsp--%>
       <!--  MgwData -->
 
     <div class="row">

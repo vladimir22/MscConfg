@@ -109,6 +109,14 @@
 			<version>${spring.version}</version>
 		</dependency>
 
+		<!-- Hibernate Validator is a must for SpringJUnit4ClassRunner.class-->
+		<dependency>
+			<groupId>org.hibernate</groupId>
+			<artifactId>hibernate-validator</artifactId>
+			<version>4.2.0.Final</version>
+		</dependency>
+
+
 		<!--Spring security-->
 		<dependency>
 			<groupId>org.springframework.security</groupId>
