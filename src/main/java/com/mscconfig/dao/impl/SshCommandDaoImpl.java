@@ -13,6 +13,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 /**
  * User: Vladimir
@@ -54,12 +55,12 @@ public class SshCommandDaoImpl implements SshCommandDao {
 			response = sshManager.executeCmd(cmd);
 			sshManager.closeConnection();
 		}  catch (InterruptedException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			log.error("Command execution failed :",e);
 		}
-		return response;  //To change body of implemented methods use File | Settings | File Templates.
+		return response;
 	}
     /**
-	 * Выполняет комманду (и все вложенные тоже).Наполняем значениями весть стэк комманд
+	 * Executes all required ordered command list, stores values at NsnCmd's
 	 * @param nsnCmd
 	 */
 	@Override
@@ -67,25 +68,23 @@ public class SshCommandDaoImpl implements SshCommandDao {
 		try {
 			SshManager sshManager = getSshManager();
 			sshManager.openConnection();
-			NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
-			while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх)
+			List<NsnCmd> cmdList = nsnCmd.getOrderedCmdList();
+			for(NsnCmd cmd : cmdList){
 				String response = sshManager.executeCmd(cmd.getCompletedCmd());
-				if(log.isInfoEnabled()) log.info("executed command :"+ cmd.getCompletedCmd());
-				for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту NsnCmd объекта
-					cmd.setFullText(response);
-					val.getValue().fillData(response);
-					//log.info(val.toString());
-				}
-				cmd = cmd.getParentCmd();   // если отца нет выходим из цикла
+				storeCommandValues(cmd, response);
+				if(log.isInfoEnabled()) log.info("NsnCmd executed:"+ cmd.getCompletedCmd());
 			}
 			sshManager.closeConnection();
 		} catch (InterruptedException e) {
-			e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+			log.error("NsnCmd execution failed :",e);
 		}
 	}
-
-
-
+	private void storeCommandValues(NsnCmd cmd, String response){
+		for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){
+			cmd.setFullText(response);
+			val.getValue().fillData(response);
+		}
+	}
 	/**
 	 * Тестовое(оффлайн) выполнение ssh комманды
 	 * @param cmd
@@ -96,27 +95,19 @@ public class SshCommandDaoImpl implements SshCommandDao {
 	public String executeTestCmd(String cmd) {
 		return SSHClientTest.cmdMap.get(cmd);
 	}
-
-
 	/**
-	 * Тестовое выполнение НСН Комманды
+	 * Test Executing NsnCmd
 	 * @param nsnCmd
 	 * @throws NsnCmdException
 	 */
 	@Override
 	@Deprecated
 	public void executeTestNsnCmd(NsnCmd nsnCmd) throws IOException {
-		NsnCmd cmd = nsnCmd.getStartCmd(); // берем начальную комманду
-		while(cmd!=null){    // выполняем все вложенные комманды (снизу вверх) до объекта nsnCmd
-			String completedCmd =  cmd.getCompletedCmd();
-			String response = SSHClientTest.cmdMap.get(completedCmd);
-			if (response==null) throw new IOException("Unknown command for SSHClientTest map :"+completedCmd);
-			for(Map.Entry<String, Param> val:cmd.getValues().entrySet()){   // заносим значения в карту
-				cmd.setFullText(response);
-				val.getValue().fillData(response);
-				//log.info(val.toString());
-			}
-			cmd = cmd.getParentCmd();   // если отца нет выходим из цикла
+		List<NsnCmd> cmdList = nsnCmd.getOrderedCmdList();
+		for(NsnCmd cmd : cmdList){
+			String response = SSHClientTest.cmdMap.get(cmd.getCompletedCmd());
+			storeCommandValues(cmd, response);
+			if(log.isInfoEnabled()) log.info("TestNsnCmd executed:"+ cmd.getCompletedCmd());
 		}
 	}
 

@@ -1,6 +1,6 @@
 package com.mscconfig.mvc.controllers;
 
-import com.mscconfig.commands.CmdFactory;
+import com.mscconfig.commands.factories.NsnCmdFactory;
 import com.mscconfig.commands.NsnCmd;
 import com.mscconfig.commands.СmdRunner;
 
@@ -39,7 +39,7 @@ public class CmdController extends AbstractController {
 	@Autowired
 	SshCommandService sshCommandService ;
 	@Autowired
-	CmdFactory cmdFactory;
+	NsnCmdFactory nsnCmdFactory;
 
 	@RequestMapping(value =CMD_PAGE_REQ, method = RequestMethod.GET)
 	public String getCmdPageReq(ModelMap model) {
@@ -53,15 +53,15 @@ public class CmdController extends AbstractController {
 	 */
 	@RequestMapping(value=CMD_RECIEVE_AJAX_REQ,  method = RequestMethod.POST)
 	public  @ResponseBody void cmdRecieveAjaxReq(HttpServletResponse response,@RequestBody  CmdAjax cmdAjax ) throws IOException { // return to ajax func. (dataType='html')
-		log.info("/cmdRecieve execute : "+cmdAjax.toString());
+		log.debug("/cmdRecieve execute : "+cmdAjax.toString());
+		String cmdName = cmdAjax.getCmdName().toLowerCase();     //Ex: "tempcmd" , "vsubcmd"
 		nsnCmd = null;
-		//TODO make more better (via factory or spring appcontext)
-		if(cmdAjax.getCmdName().toLowerCase().equals("tempcmd"))
-		nsnCmd =  cmdFactory.createTestCmd();
+		nsnCmd =  nsnCmdFactory.getNsnCmdBean(cmdName);
 
-		if(cmdAjax.getCmdName().toLowerCase().equals("vsubcmd"))
-			nsnCmd =  cmdFactory.createDispVsubCmd(cmdAjax.getNumber());
-	nsnCmd = executeCmd(response, nsnCmd,cmdAjax.getCmdTest());
+		// TODO Temrorary hardcode
+       	if(cmdName.equals("vsubcmd")) nsnCmd.replaceCustomParams("MSISDN",cmdAjax.getNumber().toUpperCase());
+
+		nsnCmd = executeCmd(response, nsnCmd,cmdAjax.getCmdTest());
 	}
 
 	private NsnCmd executeCmd(HttpServletResponse response, NsnCmd cmd, Boolean isTest) throws IOException {

@@ -1,4 +1,4 @@
-import com.mscconfig.commands.CmdFactory;
+import com.mscconfig.commands.factories.NsnCmdFactory;
 import com.mscconfig.commands.NsnCmd;
 import com.mscconfig.commands.exceptions.NsnCmdException;
 import org.junit.Test;
@@ -14,12 +14,9 @@ import static junit.framework.Assert.assertTrue;
 public class SimpleTests {
 	 @Test
 	public void testCmdFactory() throws NsnCmdException {
-		CmdFactory cmdFactory = new CmdFactory();
-		NsnCmd nsnCmd = cmdFactory.createDispVsubCmd("111");
-		 assertTrue("cmd might contains MSISDN=111; ", nsnCmd.getCompletedCmd().contains("MSISDN=111;"));
-
-
-
+		NsnCmdFactory cmdFactory = new NsnCmdFactory();
+		NsnCmd nsnCmd = cmdFactory.getNsnCmdBean("vsubcmd");
+		 assertTrue("NsnCmd:'vsubcmd' must contains: 'MSISDN='", nsnCmd.getCompletedCmd().contains("MSISDN="));
 	}
 
 }

@@ -1,29 +1,24 @@
 package com.mscconfig.commands;
 
 import com.mscconfig.commands.exceptions.NsnCmdException;
+import org.hibernate.metamodel.source.binder.Sortable;
 
 
-
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created with IntelliJ IDEA.
- * User: win7srv
+ * User: Vladimir
  * Date: 22.05.13
  * Time: 9:32
- * Объекты класса хранят команды NSN, пре-команды NSN , паттерны для получения значений, получаемые значения
+ * NSN Command Instance contains:child NSN command,  itself command(String), values related to command
  */
-public class NsnCmd {
-	private String cmd;    //ZRQI:ROU:NAME=%VALUE%;  или пока  exemmlmx -c "ZRQI:ROU:NAME=AIMSI;" -n "MSS-239663"
-	private Map<String,Param> values = new LinkedHashMap<>(); // значения
-	private NsnCmd preCmd;   // преКоманда в значения которой (%value%) нужны для выполнения команды
-	private NsnCmd parentCmd;
-	private String fullText;
+public class NsnCmd implements Comparable<NsnCmd> {
+	private String cmd;    //Ex:ZRQI:ROU:NAME=%VALUE%;  temporarily have :  exemmlmx -c "ZRQI:ROU:NAME=AIMSI;" -n "MSS-239663"
+	private Map<String,Param> values = new LinkedHashMap<>(); // values Map
+	private NsnCmd childCmd;   // преКоманда в значения которой (%value%) нужны для выполнения команды
+	private String fullText;   // full command log(ssh-answer)
 
 	public void addValue(String name, Param param) throws NsnCmdException {
 		if (param==null)  throw new NsnCmdException("Parameter isNull !!!");
@@ -33,10 +28,9 @@ public class NsnCmd {
 	public NsnCmd() {
 	}
 
-	public NsnCmd(String cmd, NsnCmd preCmd) {
+	public NsnCmd(String cmd, NsnCmd childCmd) {
 		this.cmd = cmd;
-		this.preCmd = preCmd;
-		if (preCmd!=null) preCmd.setParentCmd(this);
+		this.childCmd = childCmd;
 	}
 
 	public String getCmd() {
@@ -44,27 +38,45 @@ public class NsnCmd {
 	}
 
 	/**
-	 * Выдает готовую (составленную) НСН команду (с замененными %параметраметрами%)
+	 * Replace Values of NsnCmd (%VALUES%)  by Real VALUES from child Command
 	 * @return
 	 * @throws NsnCmdException
 	 */
 	public String getCompletedCmd() throws NsnCmdException {
-		if (cmd ==null) return null;
+		if (cmd ==null) throw new NsnCmdException("Command for execution is NULL !");
 		StringBuilder completedCmd = new StringBuilder(cmd);
 		Pattern pattern = Pattern.compile("%.\\w+?%");
 		Matcher matcher = pattern.matcher(completedCmd.toString());
-		boolean found=false;
 		while(matcher.find()){
 			String foundVal;
 			foundVal = matcher.group().toUpperCase();
 			//foundVal = foundVal.substring(1,foundVal.length()-1);  // убираем "%"
-			Param param  = preCmd.getValues().get(foundVal.substring(1,foundVal.length()-1));  // берем значения из Пре комманды и подставляем в нашу комманду
+			Param param  = childCmd.getValues().get(foundVal.substring(1,foundVal.length()-1));  // берем значения из Пре комманды и подставляем в нашу комманду
 			if (param==null) throw new NsnCmdException("Can't find in PreCmd Value= '"+foundVal+"'");
-			found=true;
+
 
 			completedCmd.replace(matcher.start(),matcher.end(),param.getValue().toUpperCase());
 		}
 		return completedCmd.toString();
+	}
+
+	/**
+	 * Replace CustomParams ($CustomParameter$) by customValues
+	 * @param customParamName
+	 * @param customParamValue
+	 * @throws NsnCmdException
+	 * @deprecated   Temprorary method while not realize complete on js (ajax) side logic
+	 */
+	public void replaceCustomParams(String customParamName, String customParamValue) throws NsnCmdException {
+		if (cmd ==null) throw new NsnCmdException("Command for execution is NULL !");
+		Pattern pattern = Pattern.compile("@.\\w+?@");
+		Matcher matcher = pattern.matcher(cmd);
+		while(matcher.find()){
+			String foundVal;
+			foundVal = matcher.group().toUpperCase();
+			if(foundVal.substring(1,foundVal.length()-1).equals(customParamName))
+				cmd = cmd.replace(foundVal,customParamValue.toUpperCase());
+		}
 	}
 
 	public void setCmd(String cmd) throws NsnCmdException {
@@ -73,7 +85,7 @@ public class NsnCmd {
 	}
 	// проверяем наличие в ПреКомманде нужных %значений%
 	private void checkPreCmdParams(String cmd) throws NsnCmdException {
-		if (preCmd ==null) throw new NsnCmdException("PreCommand isNull , cant past %Param%");
+		if (childCmd ==null) throw new NsnCmdException("PreCommand isNull , cant past %Param%");
 		Pattern pattern = Pattern.compile("%.\\w+?%");
 		Matcher matcher = pattern.matcher(cmd);
 		boolean found=false;
@@ -95,10 +107,26 @@ public class NsnCmd {
 		NsnCmd cmd =this;
 		NsnCmd startCmd = this;
 		while (cmd!=null){
-			cmd =cmd.getPreCmd();
+			cmd =cmd.getChildCmd();
 			if(cmd!=null) startCmd = cmd;
 		}
 		return startCmd;
+	}
+
+	/**
+	 * Returns full ordered List of Nsn commands required to perform
+	 * @return
+	 */
+	public List<NsnCmd> getOrderedCmdList(){
+		ArrayList<NsnCmd> cmdList = new ArrayList();
+		cmdList.add(this);
+		NsnCmd children =this.getChildCmd();
+		while(children!=null){
+			cmdList.add(children);
+			children =children.getChildCmd();
+		}
+		Collections.sort(cmdList);
+		return cmdList;
 	}
 
 	public Map<String, Param> getValues() {
@@ -109,40 +137,30 @@ public class NsnCmd {
 		this.values = values;
 	}
 
-	public NsnCmd getPreCmd() {
-		return preCmd;
+	public NsnCmd getChildCmd() {
+		return childCmd;
 	}
 
-	public void setPreCmd(NsnCmd preCmd) {
-		this.preCmd = preCmd;
+	public void setChildCmd(NsnCmd childCmd) {
+		this.childCmd = childCmd;
 	}
 
-	public NsnCmd getParentCmd() {
-		return parentCmd;
-	}
-
-	public void setParentCmd(NsnCmd parentCmd) {
-		this.parentCmd = parentCmd;
-	}
 
 	@Override
 	public String toString() {
-		String parentName="NULL";
-		if (parentCmd!=null)  parentName = parentCmd.getCmd().toString();
 		StringBuilder sb = new StringBuilder("NsnCmd{");
-		sb.append("preCmd:").append(preCmd).append("\n");
+		sb.append("childCmd:").append(childCmd).append("\n");
 		sb.append("COMMAND:\n").append(cmd).append("\n");
 		sb.append("VALUES:\n");
 		for (Map.Entry val : values.entrySet()){
 			sb.append(val.getKey()).append(" = ").append(val.getValue()).append("\n");
 		}
-		sb.append("parentCmd=").append(parentName);
 		return sb.toString();
 	}
 
 	public String getFullText() {
 		StringBuffer allText = new StringBuffer();
-		if(parentCmd!=null) allText.append(parentCmd.getFullText());
+		if(childCmd!=null) allText.append(childCmd.getFullText());
 		allText.append(this.fullText).append('\n');
 
 		return allText.toString();
@@ -150,5 +168,13 @@ public class NsnCmd {
 
 	public void setFullText(String fullText) {
 		this.fullText = fullText;
+	}
+
+	@Override
+	public int compareTo(NsnCmd o) {
+		if (this.getChildCmd()==null) {
+			if (o.getChildCmd()==null) return 0;
+			else return -1;
+		}   else return getChildCmd().compareTo(o.getChildCmd());
 	}
 }

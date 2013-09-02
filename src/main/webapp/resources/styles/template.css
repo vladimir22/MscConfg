@@ -143,6 +143,7 @@ input[type="submit"] {
 
 
 .div-shadow-layer1 {
+
 	z-index: 2;
 	opacity:0;
 	/*градиент*/

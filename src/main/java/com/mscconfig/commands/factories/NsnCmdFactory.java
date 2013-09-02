@@ -1,14 +1,17 @@
-package com.mscconfig.commands;
+package com.mscconfig.commands.factories;
 
+import com.mscconfig.commands.NsnCmd;
+import com.mscconfig.commands.Param;
 import com.mscconfig.commands.exceptions.NsnCmdException;
-import com.mscconfig.services.SshCommandService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,15 +20,22 @@ import org.springframework.stereotype.Component;
  * Time: 10:09
  * Класс-фабрика. Собирает нужную команду.
  */
-@Component("cmdFactory")
-public class CmdFactory {
+@Component("nsncmdFactory")
+public class NsnCmdFactory {
 
 
-	public static final Logger log = LoggerFactory.getLogger(CmdFactory.class);
+	public static final Logger log = LoggerFactory.getLogger(NsnCmdFactory.class);
 
-	public CmdFactory() {
+	public NsnCmdFactory() {
 	}
-	public NsnCmd createTestCmd() throws NsnCmdException {
+
+	public NsnCmd getNsnCmdBean(String beanName) throws NsnCmdException {
+		ApplicationContext context = new AnnotationConfigApplicationContext(NsnCmdBeans.class);
+		NsnCmd nsnCmd = (NsnCmd) context.getBean(beanName);
+		if(nsnCmd==null) throw new NsnCmdException("Could not find NsnCmd in NsnCmdBeans.class ");
+	   return nsnCmd;
+	}
+/*	public NsnCmd createTestCmd() throws NsnCmdException {
 		NsnCmd childCmd = new NsnCmd();
 		childCmd.setCmd("exemmlmx -c \"ZRQI:ROU:NAME=AIMSI;\" -n \"MSS-239663\"");
 		                                                 //берем 1 строку               удаляем "имя:      "     удаляем "  \n"
@@ -67,7 +77,7 @@ public class CmdFactory {
 			nsnCmd.addValue(val, new Param(val + "(.+?\n){1}", "(\\s*)" + val + "(\\W+)", "(\\s*?)\n"));
 		}
 		return nsnCmd;
-	}
+	}*/
 
 
 }
