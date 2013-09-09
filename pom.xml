@@ -235,8 +235,19 @@
 			<version>3.0.1</version>
 		</dependency>
 
+		<!--Authorize.net JAVA SDK (Local jar) -->
+		<dependency>
+			<groupId>net.authorize</groupId>
+			<artifactId>anet-java-sdk</artifactId>
+			<version>1.4.6</version>
+		</dependency>
 
-
+		 <!--HTTP Client for send POST(GET) methods-->
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>3.1</version>
+		</dependency>
 
 	</dependencies>
 

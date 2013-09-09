@@ -99,6 +99,9 @@
            $.ajax({
               type: "GET",
                 url:  "<c:url value="/cmdPage/getFullText" />",
+
+
+
                /* data:  cmdName.toString(),*/
                 dataType: "html",    // <-- back from server
                 beforeSend: function(){
