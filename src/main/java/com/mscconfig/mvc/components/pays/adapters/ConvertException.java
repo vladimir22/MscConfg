@@ -6,7 +6,7 @@ import java.io.IOException;
  * User: Vladimir
  * Date: 12.09.13
  * Time: 11:04
- * Custom exception using by transaction convertation
+ * Custom exception using by transaction convertion
  */
 public class ConvertException extends IOException {
 	public ConvertException() {

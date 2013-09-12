@@ -12,7 +12,7 @@ import java.util.HashMap;
  * User: Vladimir
  * Date: 10.09.13
  * Time: 8:26
- * Field Mapping Converter Anet <-> Ucharge
+ * Field & Transaction Mappings  for Anet<->Ucharge converter
  */
 public class ConvertMapping {
     private static final Map<String,String> FIELDS = new HashMap<String,String>();

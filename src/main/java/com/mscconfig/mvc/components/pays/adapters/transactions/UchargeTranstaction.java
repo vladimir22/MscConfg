@@ -12,7 +12,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 10.09.13
  * Time: 12:43
- * Transactions in Ucharge gateway
+ * Kind of Transactions in Ucharge gateway
  */
 public enum UchargeTranstaction implements Transaction{
 	SALE {

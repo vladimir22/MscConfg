@@ -4,7 +4,7 @@ package com.mscconfig.mvc.components.pays.adapters.transactions;
  * User: Vladimir
  * Date: 10.09.13
  * Time: 13:56
- * Please describe this stuff
+ *  Stores all needed merchant(secure) data
  */
 public class MerchantData {
 

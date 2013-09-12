@@ -6,7 +6,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 10.09.13
  * Time: 12:03
- * Please describe this stuff
+ * Kind of Transactions in Anet gateway
  */
 public enum AnetTransaction implements Transaction {
 	AUTH_CAPTURE {

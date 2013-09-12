@@ -11,7 +11,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 04.09.13
  * Time: 15:59
- * Begin Params for fill request
+ * Begin Params for RequestKind Enums
  */
 public enum RequestParams {
 

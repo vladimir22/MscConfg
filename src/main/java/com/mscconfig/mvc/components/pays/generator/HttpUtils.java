@@ -74,15 +74,6 @@ public class HttpUtils {
 		return method;
 	}
 
-	/*public static String sendPostMethod(RequestEnity entity) throws IOException {
-
-
-		Map<String,String> params = entity.getRequestKind().getParams(entity);
-		StringBuilder answer =  new StringBuilder(sendPostMethod(entity.getApiUrl(),params));
-
-		makeReplacing(answer, entity);
-		return answer.toString();
-	}*/
 	public static void makeReplacing( StringBuilder answer, RequestEnity entity){
 		Map<String,String> replaceMap =  entity.getRequestKind().getReplaceMap(entity);
 		if(replaceMap!=null)

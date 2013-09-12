@@ -7,7 +7,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 03.09.13
  * Time: 11:10
- * Templates for HTTP - requests
+ * Generate Parameters for HTTP - requests
  */
 public enum RequestKind {
 

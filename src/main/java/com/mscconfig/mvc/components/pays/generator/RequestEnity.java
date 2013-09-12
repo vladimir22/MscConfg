@@ -8,7 +8,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 03.09.13
  * Time: 11:58
- * Entity stores all data for request
+ * Entity stores all data needed for request
  */
 @Component("requestEnity")
 public class RequestEnity {

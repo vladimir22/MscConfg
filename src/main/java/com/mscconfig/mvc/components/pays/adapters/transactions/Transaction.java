@@ -8,7 +8,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 10.09.13
  * Time: 13:34
- * Please describe this stuff
+ * Common interface for Transaction Enums
  */
 public interface Transaction  {
 	public abstract Map<String,String> getParams(Map<String,String> params) throws ConvertException;

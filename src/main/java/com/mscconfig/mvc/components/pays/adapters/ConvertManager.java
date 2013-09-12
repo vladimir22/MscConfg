@@ -16,7 +16,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 10.09.13
  * Time: 11:22
- * Convertation Manager
+ * Convertion Manager reqognize kind of request and needed mapping
  */
 public class ConvertManager {
 

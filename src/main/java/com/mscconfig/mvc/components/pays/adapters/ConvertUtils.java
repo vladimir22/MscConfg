@@ -8,7 +8,7 @@ import java.util.Map;
  * User: Vladimir
  * Date: 12.09.13
  * Time: 11:16
- * Common methods for transaction converting
+ * Common static methods for transaction converting
  */
 public class ConvertUtils {
 
