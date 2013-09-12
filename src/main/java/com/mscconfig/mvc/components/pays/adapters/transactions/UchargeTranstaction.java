@@ -48,6 +48,28 @@ public enum UchargeTranstaction implements Transaction{
 			return outParams;
 		}
 	},
+	CAPTURE {
+		@Override
+		public Map<String, String> getParams(Map<String,String> params) {
+			return null;  //To change body of implemented methods use File | Settings | File Templates.
+		}
+	},
+	VOID{
+		@Override
+		public Map<String, String> getParams(Map<String,String> inParams) throws ConvertException {
+			Map<String, String> outParams = ConvertUtils.getOutParams(inParams);
+			outParams.put("requestType", "void");
+			return outParams;
+		}
+	},
+	REFUND{
+		@Override
+		public Map<String, String> getParams(Map<String,String> inParams) throws ConvertException {
+			Map<String, String> outParams = ConvertUtils.getOutParams(inParams);
+			outParams.put("requestType", "void");
+			return outParams;
+		}
+	},
 	CREDIT {
 		@Override
 		public Map<String, String> getParams(Map<String,String> params) {
@@ -62,18 +84,6 @@ public enum UchargeTranstaction implements Transaction{
 		}
 	},
 	INCREMENT {
-		@Override
-		public Map<String, String> getParams(Map<String,String> params) {
-			return null;  //To change body of implemented methods use File | Settings | File Templates.
-		}
-	},
-	CAPTURE {
-		@Override
-		public Map<String, String> getParams(Map<String,String> params) {
-			return null;  //To change body of implemented methods use File | Settings | File Templates.
-		}
-	},
-	VOID_REFUND {
 		@Override
 		public Map<String, String> getParams(Map<String,String> params) {
 			return null;  //To change body of implemented methods use File | Settings | File Templates.

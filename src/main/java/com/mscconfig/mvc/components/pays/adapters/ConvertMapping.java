@@ -30,7 +30,6 @@ public class ConvertMapping {
 
 		FIELDS.put("x_invoice_num", "transactionCode");
 		FIELDS.put("x_description", "memo");
-
 		/*FIELDS.put("x_relay_response", "notifyURL");*/   //Need handling
 
 		FIELDS.put("x_cust_id", "customerAccountCode");
@@ -43,11 +42,15 @@ public class ConvertMapping {
 		FIELDS.put("x_country", "countryCode");
 		FIELDS.put("x_email", "email");
 
+		FIELDS.put("x_trans_id", "referenceNumber");
+
        	FIELDS.put("", "");
 		FIELDS.put(null, null);
 
 		TRANSACTIONS.put(AnetTransaction.AUTH_CAPTURE, UchargeTranstaction.SALE);
 		TRANSACTIONS.put(AnetTransaction.AUTH_ONLY, UchargeTranstaction.SALE_AUTH);
+		TRANSACTIONS.put(AnetTransaction.VOID, UchargeTranstaction.VOID);
+		TRANSACTIONS.put(AnetTransaction.CREDIT, UchargeTranstaction.REFUND);
 	}
 
 
