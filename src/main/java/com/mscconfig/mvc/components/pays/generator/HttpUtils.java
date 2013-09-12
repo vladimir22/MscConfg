@@ -1,4 +1,4 @@
-package com.mscconfig.mvc.components.anet;
+package com.mscconfig.mvc.components.pays.generator;
 
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -61,42 +61,36 @@ public class HttpUtils {
 		return  method;
 	}
 
-	public static PostMethod preparePostMethod(RequestEnity reqEntity) throws IOException {
-		String url = reqEntity.getApiUrl();
-		Map<String,String> params = reqEntity.getParams();
+	public static PostMethod preparePostMethod(RequestEnity entity) throws IOException {
+		String url = null;
+		if(entity.getRequestKind().name().startsWith("ANET"))
+			url = entity.getAnetApiUrl();
+		if(entity.getRequestKind().name().startsWith("UCHAR"))
+			url = entity.getUcharApiUrl();
+		if(url==null) throw new IOException("Can't define Api URL");
+
+		Map<String,String> params = entity.getParams();
 		PostMethod method = preparePostMethod(url, params);
 		return method;
 	}
 
-	public static String sendPostMethod(RequestEnity reqEntity) throws IOException {
-		String url = reqEntity.getApiUrl();
-		RequestKind requestKind = reqEntity.getRequestKind();
-		String apiLoginId = reqEntity.getApiLoginId();
-		String transactionKey = reqEntity.getTransactionKey();
-		String relayResponseUrl = reqEntity.getRelayResponseUrl();
-		String amount = reqEntity.getAmount();
-		String expDate = reqEntity.getExpDate();
-		String cardNum = reqEntity.getCardNum();
-		String apiUrl = reqEntity.getApiUrl();
+	/*public static String sendPostMethod(RequestEnity entity) throws IOException {
 
-		Map<String,String> params = requestKind.getParams(apiLoginId,transactionKey,cardNum,expDate,amount,relayResponseUrl);
-		StringBuilder answer =  new StringBuilder(sendPostMethod(apiUrl,params));
 
-		makeReplacing(answer, reqEntity);
+		Map<String,String> params = entity.getRequestKind().getParams(entity);
+		StringBuilder answer =  new StringBuilder(sendPostMethod(entity.getApiUrl(),params));
+
+		makeReplacing(answer, entity);
 		return answer.toString();
-	}
-	public static void makeReplacing( StringBuilder answer, RequestEnity reqEntity){
-		RequestKind requestKind = reqEntity.getRequestKind();
-		String amount = reqEntity.getAmount();
-		String expDate = reqEntity.getExpDate();
-		String cardNum = reqEntity.getCardNum();
-
-		Map<String,String> replaceMap =  requestKind.getReplaceMap(cardNum,expDate,amount);
+	}*/
+	public static void makeReplacing( StringBuilder answer, RequestEnity entity){
+		Map<String,String> replaceMap =  entity.getRequestKind().getReplaceMap(entity);
 		if(replaceMap!=null)
 			makeReplacing(answer,replaceMap);
 	}
 
 	public static void makeReplacing( StringBuilder answer, Map<String,String> replaceMap){
+		if (replaceMap==null) return;
 		for (Map.Entry<String,String> entry : replaceMap.entrySet()){
 			makeReplacing(answer, entry.getKey(), entry.getValue());
 		}

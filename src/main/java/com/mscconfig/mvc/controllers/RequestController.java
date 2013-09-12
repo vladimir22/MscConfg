@@ -1,10 +1,14 @@
 package com.mscconfig.mvc.controllers;
 
-import com.mscconfig.mvc.components.anet.HttpUtils;
-import com.mscconfig.mvc.components.anet.RequestEnity;
-import com.mscconfig.mvc.components.anet.RequestKind;
+
+import com.mscconfig.mvc.components.pays.adapters.ConvertManager;
+import com.mscconfig.mvc.components.pays.generator.HttpUtils;
+import com.mscconfig.mvc.components.pays.generator.RequestEnity;
+import com.mscconfig.mvc.components.pays.generator.RequestKind;
+import com.mscconfig.mvc.components.pays.generator.RequestParams;
 import net.authorize.ResponseField;
 import org.apache.commons.httpclient.NameValuePair;
+import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,8 +24,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,9 +46,6 @@ public class RequestController {
 	protected static final String REQ_DATA_FOR_PAYPAGE = "/paypageData";
 	protected static final String VIEW_ANET_PAGE = "/anetview";
 
-	String apiLoginId = "7C2r3bW235";
-	String transactionKey = "7C4CcR7m464876ht";
-	String relayResponseUrl = "http://localhost:8080/relay_response.jsp";
 
 	/*-------------------Custom Requests--------------------------------*/
 	@RequestMapping(value = "/checkout_form", method = RequestMethod.GET)
@@ -86,18 +89,27 @@ public class RequestController {
 	public String postAnetReq(ModelMap model) {
 		log.debug("Executed paypage");
 
-		String apiUrl = "https://test.authorize.net/gateway/transact.dll";
-		String apiLoginId = "7C2r3bW235";
-		String transactionKey = "7C4CcR7m464876ht";
+		String anetApiUrl = "https://test.authorize.net/gateway/transact.dll";
+		String anetApiLoginId = "7C2r3bW235";
+		String anetTransactionKey = "7C4CcR7m464876ht";
+		String ucharApiUrl = "https://sandbox.unipaygateway.com/gates/httpform";
+		String ucharMerchantAccountCode = "10001";
+		String ucharUserName = "vv.ilc@mail.ru";
+		String ucharPassword = "Siemens1";
 		String relayResponseUrl = "http://localhost:8080/relay_response_postanet";
-
 		String cardNum = "4111111111111111";
 		String expDate = "1213";
-		String amount = "100";
+		String amount = "1";
 
-		model.addAttribute("apiUrl",apiUrl );
-		model.addAttribute("apiLoginId", apiLoginId);
-		model.addAttribute("transactionKey",transactionKey);
+		model.addAttribute("anetApiUrl",anetApiUrl );
+		model.addAttribute("anetApiLoginId", anetApiLoginId);
+		model.addAttribute("anetTransactionKey",anetTransactionKey);
+
+		model.addAttribute("ucharApiUrl",ucharApiUrl);
+		model.addAttribute("ucharMerchantAccountCode",ucharMerchantAccountCode );
+		model.addAttribute("ucharUserName",ucharUserName );
+		model.addAttribute("ucharPassword",ucharPassword);
+
 		model.addAttribute("relayResponseUrl",relayResponseUrl );
 
 		model.addAttribute("amount",amount );
@@ -142,51 +154,133 @@ public class RequestController {
 	@RequestMapping(value = "/postanetAjax", method = RequestMethod.GET)
 	public @ResponseBody
 	void postAnetAjaxReq(HttpServletRequest request,HttpServletResponse response,
-			@ModelAttribute("apiUrl") String apiUrl, @ModelAttribute("apiLoginId") String apiLoginId ,
-			@ModelAttribute("transactionKey") String transactionKey , @ModelAttribute("relayResponseUrl") String relayResponseUrl,
-			@ModelAttribute("amount") String amount , @ModelAttribute("expDate") String expDate ,
-			@ModelAttribute("cardNum") String cardNum, @ModelAttribute("requestKindName") String requestKindName,
+			@ModelAttribute("anetApiUrl") String anetApiUrl,
+			@ModelAttribute("anetApiLoginId") String anetApiLoginId ,
+			@ModelAttribute("anetTransactionKey") String anetTransactionKey,
+
+			@ModelAttribute("ucharApiUrl") String ucharApiUrl,
+			@ModelAttribute("ucharMerchantAccountCode") String ucharMerchantAccountCode,
+			@ModelAttribute("ucharUserName") String ucharUserName,
+			@ModelAttribute("ucharPassword") String ucharPassword,
+
+            @ModelAttribute("relayResponseUrl") String relayResponseUrl,
+
+			@ModelAttribute("cardNum") String cardNum,
+			@ModelAttribute("expDate") String expDate,
+			@ModelAttribute("amount") String amount ,
+
+			@ModelAttribute("requestKindName") String requestKindName,
+
 			@ModelAttribute("name1") String name1, @ModelAttribute("value1") String value1,
 			@ModelAttribute("name2") String name2, @ModelAttribute("value2") String value2,
-			@ModelAttribute("name3") String name3, @ModelAttribute("value3") String value3 	)  throws IOException {
+			@ModelAttribute("name3") String name3, @ModelAttribute("value3") String value3,
+			@ModelAttribute("name4") String name4, @ModelAttribute("value4") String value4,
+			@ModelAttribute("name5") String name5, @ModelAttribute("value5") String value5,
+			@ModelAttribute("name6") String name6, @ModelAttribute("value6") String value6,
+			@ModelAttribute("name7") String name7, @ModelAttribute("value7") String value7,
+			@ModelAttribute("name8") String name8, @ModelAttribute("value8") String value8,
+			@ModelAttribute("name9") String name9, @ModelAttribute("value9") String value9,
+			@ModelAttribute("name10") String name10, @ModelAttribute("value10") String value10,
+			@ModelAttribute("makeRequestConvertation") Boolean makeRequestConvertation,
+			@ModelAttribute("makeResponseConvertation") Boolean makeResponseConvertation
+
+	) throws IOException, URISyntaxException {
 
 		log.debug("Executed postanet");
 
-		Map<String,String> customParams = new HashMap<>();
-		customParams.put(name1,value1);
-		customParams.put(name2,value2);
-		customParams.put(name3,value3);
-		customParams.remove("");
+
 		RequestKind selectedRequestKind = null;
 		RequestKind[] requestKinds = RequestKind.class.getEnumConstants();
 		for(RequestKind reqEntity : requestKinds){
 			if(reqEntity.getKindName().equals(requestKindName))
 				selectedRequestKind = reqEntity;
 		}
-		RequestEnity reqEntity = new RequestEnity(apiLoginId,transactionKey,relayResponseUrl,
-													amount,expDate,cardNum,
-														apiUrl,selectedRequestKind);
+		RequestEnity entity = new RequestEnity();
+		entity.setAnetApiUrl(anetApiUrl);
+		entity.setAnetApiLoginId(anetApiLoginId);
+		entity.setAnetTransactionKey(anetTransactionKey);
 
-		Map<String,String> params = reqEntity.getRequestKind().getParams(apiLoginId, transactionKey, cardNum, expDate, amount, relayResponseUrl);
-		params.putAll(customParams);
-		reqEntity.setParams(params);
+		entity.setUcharApiUrl(ucharApiUrl);
+		entity.setUcharMerchantAccountCode(ucharMerchantAccountCode);
+		entity.setUcharUserName(ucharUserName);
+		entity.setUcharPassword(ucharPassword);
 
-		PostMethod postMethod = HttpUtils.preparePostMethod(reqEntity);
-		StringBuilder answer= new StringBuilder(HttpUtils.sendPostMethod(postMethod));
-		HttpUtils.makeReplacing(answer,reqEntity);
+		entity.setRelayResponseUrl(relayResponseUrl);
+
+		entity.setCardNum(cardNum);
+		entity.setExpDate(expDate);
+		entity.setAmount(amount);
+
+		entity.setRequestKind(selectedRequestKind);
+
+		Map<String,String> params = selectedRequestKind.getParams(entity);
+
+		Map<String,String> customParams = new HashMap<>();
+		customParams.put(name1,value1);
+		customParams.put(name2,value2);
+		customParams.put(name3,value3);
+		customParams.put(name4,value4);
+		customParams.put(name5,value5);
+		customParams.put(name6,value6);
+		customParams.put(name7,value7);
+		customParams.put(name8,value8);
+		customParams.put(name9,value9);
+		customParams.put(name10,value10);
+
+		for(Entry<String, String> entry : customParams.entrySet()) {
+			String customValue = entry.getValue();
+			if (!customValue.isEmpty())
+				if(customValue.toUpperCase().equals("DEL"))
+					params.remove(entry.getKey());
+				else
+					params.put(entry.getKey(),entry.getValue());
+
+		}
+
+		entity.setParams(params);
+
+		Map<String,String> replaceMap = selectedRequestKind.getReplaceMap(entity);
+
+		PostMethod postMethod = HttpUtils.preparePostMethod(entity);
 
 		response.setCharacterEncoding("utf-8");
 		response.setContentType("text/html");
 		PrintWriter printWriter=  response.getWriter();
 
 		printWriter.write("<div id='httpTrace' style='width: 100%;'>");
-		printWriter.write("<div id='httpRequest' style='width: 40%; float: left; display: inline-block;' >");
-		printWriter.write("<h1 style='padding:0 0 0 30px'> Request:</h1>");
-		printWriter.write("<br>");
-		printWriter.write("<p id='uri' style='color:green'> Path:</p>");
-		printWriter.write("<br>");
 
-		printWriter.write("<p>");
+		   writeRequest(printWriter,postMethod,"original");
+
+		if (makeRequestConvertation){
+			ConvertManager convertManager = new ConvertManager(anetApiUrl,anetApiLoginId,anetTransactionKey,
+					ucharApiUrl,ucharMerchantAccountCode,ucharUserName,ucharPassword);
+			postMethod = convertManager.convert(postMethod);
+
+			/*selectedRequestKind.makeConvertation(entity);
+			postMethod = HttpUtils.preparePostMethod(entity);*/
+			writeRequest(printWriter,postMethod,"converted");
+			replaceMap = RequestParams.UCHARGE_LOGIN.getReplaceMap(entity);
+		}
+		StringBuilder answer= new StringBuilder(HttpUtils.sendPostMethod(postMethod));
+
+		if (makeResponseConvertation){
+			// Handle to convert response
+		}
+
+		HttpUtils.makeReplacing(answer,replaceMap);
+
+		printWriter.write("<div id='httpResponse' style='width: 40%; display: inline-block;'>");
+		printWriter.write("<h1 style='padding:0 0 0 30px'> Response:</h1>");
+		printWriter.write("<br>");
+		printWriter.write(answer.toString());
+		printWriter.write("</div>");
+		printWriter.write("</div>");
+	}
+
+	private void writeRequest(PrintWriter printWriter, PostMethod postMethod, String divName) throws URIException {
+		printWriter.write("<div id='"+divName+"' style='width: 40%; float: left; display: inline-block;' >");
+		printWriter.write("<h1 style='padding:0 0 0 30px'> Request("+divName+"):</h1>");
+		printWriter.write("<p id='uri' style='color:green'> Path:");
 		printWriter.write(postMethod.getURI().toString());
 		printWriter.write("</p>");
 
@@ -200,16 +294,7 @@ public class RequestController {
 		}
 		printWriter.write("</p>");
 		printWriter.write("</div>");
-
-		printWriter.write("<div id='httpResponse' style='width: 40%; display: inline-block;'>");
-		printWriter.write("<h1 style='padding:0 0 0 30px'> Response:</h1>");
-		printWriter.write("<br>");
-		printWriter.write(answer.toString());
-		printWriter.write("</div>");
-		printWriter.write("</div>");
-
 	}
-
 
 
 	private void parseResponse(){

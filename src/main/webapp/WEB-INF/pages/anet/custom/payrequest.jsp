@@ -10,7 +10,7 @@
 <html>
 <head>
     <title></title>
-    <link href="resources/styles/cmd.css" rel="stylesheet">
+    <link href="resources/styles/payrequest.css" rel="stylesheet">
     <script src="resources/styles/jquery-1.9.1.js"></script>
 
     <script type="text/javascript">
@@ -18,9 +18,15 @@
             $.ajax({
                 type: "GET",
                 url:  "<c:url value="/postanetAjax" />",
-                data: "apiUrl="+$("#apiUrl").val()+
-                        "&apiLoginId="+$("#apiLoginId").val()+
-                        "&transactionKey="+$("#transactionKey").val()+
+                data:   "anetApiUrl="+$("#anetApiUrl").val()+
+                        "&anetApiLoginId="+$("#anetApiLoginId").val()+
+                        "&anetTransactionKey="+$("#anetTransactionKey").val()+
+
+                        "&ucharApiUrl="+$("#ucharApiUrl").val()+
+                        "&ucharMerchantAccountCode="+$("#ucharMerchantAccountCode").val()+
+                        "&ucharUserName="+$("#ucharUserName").val()+
+                        "&ucharPassword="+$("#ucharPassword").val()+
+
                         "&relayResponseUrl="+$("#relayResponseUrl").val()+
 
                         "&cardNum="+$("#cardNum").val()+
@@ -33,29 +39,42 @@
                         "&name2="+$("#name2").val()+
                         "&value2="+$("#value2").val()+
                         "&name3="+$("#name3").val()+
-                        "&value3="+$("#value3").val()
-                        
-                
-                
-                
+                        "&value3="+$("#value3").val()+
+                        "&name4="+$("#name4").val()+
+                        "&value4="+$("#value4").val()+
+                        "&name5="+$("#name5").val()+
+                        "&value5="+$("#value5").val()+
+                        "&name6="+$("#name6").val()+
+                        "&value6="+$("#value6").val()+
+                        "&name7="+$("#name7").val()+
+                        "&value7="+$("#value7").val()+
+                        "&name8="+$("#name8").val()+
+                        "&value8="+$("#value8").val()+
+                        "&name9="+$("#name9").val()+
+                        "&value9="+$("#value9").val()+
+                        "&name10="+$("#name10").val()+
+                        "&value10="+$("#value10").val()+
+
+                        "&makeRequestConvertation="+$("#makeRequestConvertation").prop('checked') +  // true or false
+                        "&makeResponseConvertation="+$("#makeResponseConvertation").prop('checked')
                 ,
 
                 dataType: "html",    // <-- back from server
                 beforeSend: function(){
-                    $("#anetResponse").html('<img src="resources/styles/AjaxLoader.gif" /> Now loading...');
+                    $("#httpResponse").html('<img src="resources/styles/AjaxLoader.gif" /> Now loading...');
                 },
                 error: function(msg){
                     alert("fail");
                 },
                 success: function(result){
-                    $("#anetResponse").html(result);
+                    $("#httpResponse").html(result);
                 }
             });
         };
     </script>
 
     <script type="text/javascript">
-        function setBeginParams() {
+        function setBeginParams() {   // While NOT USED !!!
             var  requestKindName = $("#requestKindName").find("option:selected").val() ;
 
               if(requestKindName.indexOf("UCHARGE")!=-1){
@@ -92,8 +111,10 @@
                 $('#relayResponseUrl').val('http://localhost:8080/relay_response_postanet');
 
                 $('#cardNumTitle').text('Card Number');
-                $('#cardNum').val('4007000000027');
-                $('#expDate').val('1213');
+/*                $('#cardNum').val('4007000000027');
+                $('#expDate').val('1213');*/
+                $('#cardNum').val('4111111111111111');
+                $('#expDate').val('1017');
 
                 $('#amountTitle').text('amount(ANET:Dollars.Cents):');
                 $('#amount').val('1.01');
@@ -112,45 +133,86 @@
 <div style=" width:610px; float: left; display: inline-block;">
     <table>
         <tr>
-            <td style="text-align: center; color:green">
+            <td style="color:green">
                 Parameter name
             </td>
-            <td style="text-align: center;color:green">
+            <td style="color:green">
                 Parameter value
             </td>
         </tr>
         <tr>
-            <td colspan="2" style="text-align: center; color: #8a2be2">
+            <td colspan="2" style=" color: #5bc0de">
                 Merchant (SECURE) data
             </td>
         </tr>
+
+        <%--ANET Data--%>
         <tr>
             <td>
-                <p id="apiUrlTitle">apiUrl:</p>
+                <p id="anetApiUrlTitle">anetApiUrl:</p>
             </td>
             <td>
-                <input type='text' class='text' id='apiUrl' name='apiUrl' value='${apiUrl}'
+                <input type='text' class='text' id='anetApiUrl' name='anetApiUrl' value='${anetApiUrl}'
                        size='65'  />
             </td>
         </tr>
         <tr>
             <td>
-                <p id="apiLoginIdTitle">apiLoginId:</p>
+                <p id="anetApiLoginIdTitle">anetApiLoginId:</p>
             </td>
             <td>
-                <input type='text' class='text' id='apiLoginId' name='apiLoginId' value='${apiLoginId}'
+                <input type='text' class='text' id='anetApiLoginId' name='anetApiLoginId' value='${anetApiLoginId}'
                        size='65'  />
             </td>
         </tr>
         <tr>
             <td>
-                <p id="transactionKeyTitle">transactionKey: </p>
+                <p id="anetTransactionKeyTitle">anetTransactionKey:</p>
             </td>
             <td>
-                <input type='text' class='text' id='transactionKey' name='transactionKey' value='${transactionKey}'
+                <input type='text' class='text' id='anetTransactionKey' name='anetTransactionKey' value='${anetTransactionKey}'
                        size='65'  />
             </td>
         </tr>
+
+        <%--UCHARGE Data--%>
+        <tr>
+            <td>
+                <p id="ucharApiUrlTitle">ucharApiUrl:</p>
+            </td>
+            <td>
+                <input type='text' class='text' id='ucharApiUrl' name='ucharApiUrl' value='${ucharApiUrl}'
+                       size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="ucharMerchantAccountCodeTitle">ucharMerchantAccountCode:</p>
+            </td>
+            <td>
+                <input type='text' class='text' id='ucharMerchantAccountCode' name='ucharMerchantAccountCode' value='${ucharMerchantAccountCode}'
+                       size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="ucharUserNameTitle">ucharUserName:</p>
+            </td>
+            <td>
+                <input type='text' class='text' id='ucharUserName' name='ucharUserName' value='${ucharUserName}'
+                       size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <p id="ucharPasswordTitle">ucharPassword:</p>
+            </td>
+            <td>
+                <input type='text' class='text' id='ucharPassword' name='ucharPassword' value='${ucharPassword}'
+                       size='65'  />
+            </td>
+        </tr>
+
         <tr>
             <td>
                 relayResponseUrl:
@@ -162,7 +224,7 @@
         </tr>
 
         <tr>
-            <td colspan="2" style="text-align: center; color: blue">
+            <td colspan="2" style=" color: #5bc0de">
                 Client data
             </td>
         </tr>
@@ -195,19 +257,31 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td colspan="2">
+                <br>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+
+                <input type="checkbox" name="makeRequestConvertation" id="makeRequestConvertation"   value="makeRequestConvertation">Make Request Convertation
+                <input type="checkbox" name="makeResponseConvertation" id="makeResponseConvertation"   value="makeResponseConvertation">Make Response Convertation
+
+            </td>
+        </tr>
+        <tr>
+            <td style=" color: #8a2be2">
                 Transaction Kind:
             </td>
-            <td>
+             <td>
                 <%--<form:select path="requestKind" items="${requestKinds}" var="type">
                     <form:options/>
                 </form:select>--%>
-                    <select name="requestKindName" id="requestKindName" onchange="setBeginParams()">
+                    <select name="requestKindName" id="requestKindName" <%--onchange="setBeginParams()"--%>>
                        <c:forEach items="${requestKinds}" var="requestKind">
                            <option value="${requestKind.kindName}" ${requestKind.kindName == selectedRequestKind.kindName ? 'selected="selected"' : ''}>${requestKind.kindName}</option>
                         </c:forEach>
                     </select>
-
             </td>
         </tr>
 
@@ -215,22 +289,21 @@
     </table>
     </div>
 <div style='width:500px; float: left; display: inline-block;' >
-    <p style="color: #a52a2a; padding-left: 50px"> Additional(Overriding) params:</p>
     <table>
         <tr>
             <td>
             <p style="color: #d59392">Name:</p>
             </td>
             <td>
-                <p style="color: #d59392">Value</p>
+                <p style="color: #d59392">Value       Additional(Overriding) params:</p>
             </td>
         </tr>
         <tr>
             <td>
-              <input type='text' class='text' id='name1' name='name1' size='15'  />
+              <input type='text' class='text' id='name1' name='name1' size='15' />
             </td>
             <td>
-                <input type='text' class='text' id='value1' name='value1' size='65'  />
+                <input type='text' class='text' id='value1' name='value1' size='65'   />
             </td>
         </tr>
         <tr>
@@ -249,17 +322,73 @@
                 <input type='text' class='text' id='value3' name='value3' size='65'  />
             </td>
         </tr>
+        <tr>
+            <td>
+                <input type='text' class='text' id='name4' name='name4' size='15'  />
+            </td>
+            <td>
+                <input type='text' class='text' id='value4' name='value4' size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type='text' class='text' id='name5' name='name5' size='15'  />
+            </td>
+            <td>
+                <input type='text' class='text' id='value5' name='value5' size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type='text' class='text' id='name6' name='name6' size='15'  />
+            </td>
+            <td>
+                <input type='text' class='text' id='value6' name='value6' size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type='text' class='text' id='name7' name='name7' size='15'  />
+            </td>
+            <td>
+                <input type='text' class='text' id='value7' name='value7' size='65'  />
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input type='text' class='text' id='name8' name='name8' size='15'  />
+            </td>
+            <td>
+                <input type='text' class='text' id='value8' name='value8' size='65'  />
+            </td>
+        </tr>
+        <tr>
+        <td>
+            <input type='text' class='text' id='name9' name='name9' size='15'  />
+        </td>
+        <td>
+            <input type='text' class='text' id='value9' name='value9' size='65'  />
+        </td>
+    </tr>
+        <tr>
+            <td>
+                <input type='text' class='text' id='name10' name='name10' size='15'  />
+            </td>
+            <td>
+                <input type='text' class='text' id='value10' name='value10' size='65'  />
+            </td>
+        </tr>
     </table>
     
 </div>
 
 </div>
     <div style="width:10%;clear:both; dispaly:inline-block;">
-        <input type='button' onclick="sentAnetReq()" name="sendRequest-->" value="sendRequest" id="sendRequest"/>
+        <input type='button' onclick="sentAnetReq()" name="sendRequest" value="sendRequest" id="sendRequest"/>
     </div>
 
 <div style="width:100%;display: inline-block; padding: 0 0 0 0;" >
-    <div name="anetResponse" id="anetResponse"></div>
+    <div name="httpResponse" id="httpResponse"></div>
 </div>
 </div>
 </body>
