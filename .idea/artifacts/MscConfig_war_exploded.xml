@@ -65,6 +65,7 @@
           <element id="library" level="project" name="Maven: net.authorize:anet-java-sdk:1.4.6" />
           <element id="library" level="project" name="Maven: commons-httpclient:commons-httpclient:3.1" />
           <element id="library" level="project" name="Maven: commons-codec:commons-codec:1.2" />
+          <element id="library" level="project" name="Maven: com.google.guava:guava:14.0.1" />
         </element>
       </element>
     </root>

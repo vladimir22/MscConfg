@@ -54,9 +54,10 @@
                         "&value9="+$("#value9").val()+
                         "&name10="+$("#name10").val()+
                         "&value10="+$("#value10").val()+
-
+                        
                         "&makeRequestConvertation="+$("#makeRequestConvertation").prop('checked') +  // true or false
-                        "&makeResponseConvertation="+$("#makeResponseConvertation").prop('checked')
+                        "&makeResponseConvertation="+$("#makeResponseConvertation").prop('checked')+
+                        "&showUnformattedMessage="+$("#showUnformattedMessage").prop('checked')
                 ,
 
                 dataType: "html",    // <-- back from server
@@ -265,8 +266,12 @@
             <td colspan="2">
 
                 <input type="checkbox" name="makeRequestConvertation" id="makeRequestConvertation"   value="makeRequestConvertation">Make Request Convertation
+                &nbsp &nbsp &nbsp
                 <input type="checkbox" name="makeResponseConvertation" id="makeResponseConvertation"   value="makeResponseConvertation">Make Response Convertation
-
+                &nbsp &nbsp &nbsp
+                <input type="checkbox" name="showUnformattedMessage" id="showUnformattedMessage"   value="showUnformattedMessage">Show Unformatted Message
+                
+                
             </td>
         </tr>
         <tr>

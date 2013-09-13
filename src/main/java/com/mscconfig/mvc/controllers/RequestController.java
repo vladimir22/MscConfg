@@ -182,7 +182,8 @@ public class RequestController {
 			@ModelAttribute("name9") String name9, @ModelAttribute("value9") String value9,
 			@ModelAttribute("name10") String name10, @ModelAttribute("value10") String value10,
 			@ModelAttribute("makeRequestConvertation") Boolean makeRequestConvertation,
-			@ModelAttribute("makeResponseConvertation") Boolean makeResponseConvertation
+			@ModelAttribute("makeResponseConvertation") Boolean makeResponseConvertation,
+			@ModelAttribute("showUnformattedMessage") Boolean showUnformattedMessage
 
 	) throws IOException, URISyntaxException {
 
@@ -249,25 +250,28 @@ public class RequestController {
 
 		printWriter.write("<div id='httpTrace' style='width: 100%;'>");
 
-		   writeRequest(printWriter,postMethod,"original");
+		writeRequest(printWriter,postMethod,"original");
 
+		StringBuilder answer= new StringBuilder();
 		if (makeRequestConvertation){
 			ConvertManager convertManager = new ConvertManager(anetApiUrl,anetApiLoginId,anetTransactionKey,
 					ucharApiUrl,ucharMerchantAccountCode,ucharUserName,ucharPassword);
-			postMethod = convertManager.convert(postMethod);
+			PostMethod convertedPostMethod = convertManager.convert(postMethod);
 
 			/*selectedRequestKind.makeConvertation(entity);
 			postMethod = HttpUtils.preparePostMethod(entity);*/
-			writeRequest(printWriter,postMethod,"converted");
+			writeRequest(printWriter,convertedPostMethod,"converted");
 			replaceMap = RequestParams.UCHARGE_LOGIN.getReplaceMap(entity);
+			answer.append(HttpUtils.sendPostMethod(convertedPostMethod));
+			if (makeResponseConvertation){
+			StringBuilder convertedAnswer = convertManager.convertResponse(postMethod,convertedPostMethod,answer);
+			}
+		}else
+			answer.append(HttpUtils.sendPostMethod(postMethod));
+		if (!showUnformattedMessage){
+			HttpUtils.makeReplacing(answer,replaceMap);
 		}
-		StringBuilder answer= new StringBuilder(HttpUtils.sendPostMethod(postMethod));
 
-		if (makeResponseConvertation){
-			// Handle to convert response
-		}
-
-		HttpUtils.makeReplacing(answer,replaceMap);
 
 		printWriter.write("<div id='httpResponse' style='width: 40%; display: inline-block;'>");
 		printWriter.write("<h1 style='padding:0 0 0 30px'> Response:</h1>");

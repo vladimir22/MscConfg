@@ -19,32 +19,24 @@ public enum UchargeTranstaction implements Transaction{
 		@Override
 		public Map<String, String> getParams(Map<String,String> inParams) throws ConvertException {
 
-			Map<String, String> outParams = ConvertUtils.getOutParams(inParams);
+			Map<String, String> outParams = ConvertUtils.getOutParams(inParams,U);
 			outParams.put("requestType", "sale");
 
 			outParams.put("accountType", "R");
 			outParams.put("transactionIndustryType", "RE");
-			// TODO Handle amount convertation , in future realise mechanism
-            Double amount = Double.valueOf(outParams.get("amount"));
-			amount*=100;
-			Integer a =amount.intValue();
-			outParams.put("amount", a.toString());
+
 			return outParams;
 		}
 	},
 	SALE_AUTH {
 		@Override
 		public Map<String, String> getParams(Map<String,String> inParams) throws ConvertException {
-			Map<String, String> outParams = ConvertUtils.getOutParams(inParams);
+			Map<String, String> outParams = ConvertUtils.getOutParams(inParams,U);
 			outParams.put("requestType", "sale-auth");
 
 			outParams.put("accountType", "R");
 			outParams.put("transactionIndustryType", "RE");
-			// TODO Handle amount convertation , in future realise mechanism
-			Double amount = Double.valueOf(outParams.get("amount"));
-			amount*=100;
-			Integer a =amount.intValue();
-			outParams.put("amount", a.toString());
+
 			return outParams;
 		}
 	},
@@ -57,7 +49,7 @@ public enum UchargeTranstaction implements Transaction{
 	VOID{
 		@Override
 		public Map<String, String> getParams(Map<String,String> inParams) throws ConvertException {
-			Map<String, String> outParams = ConvertUtils.getOutParams(inParams);
+			Map<String, String> outParams = ConvertUtils.getOutParams(inParams,U);
 			outParams.put("requestType", "void");
 			return outParams;
 		}
@@ -65,7 +57,7 @@ public enum UchargeTranstaction implements Transaction{
 	REFUND{
 		@Override
 		public Map<String, String> getParams(Map<String,String> inParams) throws ConvertException {
-			Map<String, String> outParams = ConvertUtils.getOutParams(inParams);
+			Map<String, String> outParams = ConvertUtils.getOutParams(inParams,U);
 			outParams.put("requestType", "void");
 			return outParams;
 		}
